@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from routers.users import router as users_router
-from database.postgre_db import engine, Base
-
+from app.database.postgre_db import engine, Base
+from app.routers.users import router as users_router
+from app.routers.protected import router as protected_router
 
 async def create_tables():
     async with engine.begin() as conn:
@@ -23,6 +23,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(users_router)
+app.include_router(protected_router)
 
 
 @app.get("/")

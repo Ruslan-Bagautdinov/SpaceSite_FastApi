@@ -1,13 +1,17 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models import User
-from auth.schemas import UserCreate
-from auth.utils import get_password_hash, verify_password
+from app.database.models import User
+from app.auth.schemas import UserCreate
+from app.auth.utils import get_password_hash, verify_password
 
 
 async def get_user(db: AsyncSession, user_id: int):
-    return await db.get(User, user_id)
+    result = await db.get(User, user_id)
+    return {
+            'username': result.username,
+            'email': result.email
+    }
 
 
 async def get_user_by_username(db: AsyncSession, username: str):
@@ -33,3 +37,4 @@ async def authenticate_user(db: AsyncSession, username: str, password: str):
     if not verify_password(password, user.hashed_password):
         return False
     return user
+

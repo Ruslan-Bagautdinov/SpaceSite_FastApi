@@ -1,6 +1,6 @@
-
 from sqlalchemy.orm import Mapped, mapped_column
-from postgre_db import Base
+
+from app.database.postgre_db import Base
 
 
 class User(Base):
@@ -10,5 +10,3 @@ class User(Base):
     username: Mapped[str] = mapped_column(index=True)
     email: Mapped[str] = mapped_column(index=True)
     hashed_password: Mapped[str] = mapped_column(index=True)
-
-

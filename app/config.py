@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SECRET_KEY = getenv('SECRET_KEY')
-ACCESS_TOKEN_EXPIRE_MINUTES = getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
+ACCESS_TOKEN_EXPIRE_MINUTES = int(getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))
 ALGORITHM = getenv('ALGORITHM')
 
 PG_DB_HOST = getenv('PG_DB_HOST')
