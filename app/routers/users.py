@@ -2,16 +2,14 @@ from fastapi import (APIRouter,
                      Depends,
                      HTTPException,
                      status,
-                     Request,
-                     Response,
-                     Cookie)
+                     Request)
 from fastapi.security import OAuth2PasswordRequestForm
 
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.postgre_db import get_session
-from app.auth.schemas import UserBase, UserCreate, User, TokenData
+from app.auth.schemas import UserCreate, User, TokenData
 from app.database.crud import (create_user,
                                get_user,
                                get_user_by_username,
@@ -42,8 +40,7 @@ async def register_user(user: UserCreate,
 
 
 @router.post("/login")
-async def login_for_access_token(response: Response,
-                                 form_data: OAuth2PasswordRequestForm = Depends(),
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),
                                  db: AsyncSession = Depends(get_session)
                                  ):
     user = await authenticate_user(db, form_data.username, form_data.password)
