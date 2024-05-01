@@ -12,7 +12,8 @@ async def create_tables():
 
 
 async def shutdown():
-    pass
+    print('Shutting down...')
+    return {"message": "Shutting down..."}
 
 
 @asynccontextmanager
@@ -27,11 +28,6 @@ app.include_router(users_router)
 app.include_router(protected_router)
 
 
-@app.get("/")
+@app.get("/", tags=["root"])
 async def root():
     return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}

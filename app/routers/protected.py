@@ -7,7 +7,7 @@ from app.database.postgre_db import get_session
 from app.routers.users import get_current_user, credentials_exception
 
 
-router = APIRouter(tags=['Protected'])
+router = APIRouter(tags=['protected'])
 
 
 @router.post('/secret_place')

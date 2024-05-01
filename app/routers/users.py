@@ -19,7 +19,7 @@ from app.auth.utils import create_access_token, decode_token
 from jwt import PyJWTError
 import base64
 
-router = APIRouter(tags=['Users'])
+router = APIRouter(tags=['users'])
 
 credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
