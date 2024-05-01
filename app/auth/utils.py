@@ -1,6 +1,7 @@
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jwt import encode, decode
+from base64 import b64encode, b64decode
 
 from app.config import ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
 
@@ -21,8 +22,11 @@ def create_access_token(data: dict):
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    encoded_token = b64encode(encoded_jwt).decode('utf-8')
+    return encoded_token
 
 
 def decode_token(token):
-    return decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    token = token.replace("Bearer ", "")
+    access_token = b64decode(token).decode('utf-8')
+    return decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
