@@ -10,8 +10,8 @@ Root
 
 {% block page_content %}
 
-{% if username %}
-    {{ username }}, {{ data }} !!!
+{% if user %}
+    {{ user.username }}, {{ data }} !!!
 {% else %}
     Stranger, {{ data }} !!!
 {% endif %}

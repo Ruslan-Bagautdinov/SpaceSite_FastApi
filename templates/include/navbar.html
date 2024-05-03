@@ -21,8 +21,8 @@
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        {% if username %}
-          Welcome, {{ username }}
+        {% if user %}
+          Welcome, {{ user.username }}
         {% else %}
           Login or register
         {% endif %}
@@ -31,9 +31,9 @@
       <ul class="dropdown-menu dropdown-menu-end">
         {% if user %}
           <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li><a class="dropdown-item" href="#">Logout</a></li>
+          <li><a class="dropdown-item" href="/logout">Logout</a></li>
         {% else %}
-          <li><a class="dropdown-item" href="#">Login</a></li>
+          <li><a class="dropdown-item" href="/login">Login</a></li>
           <li><a class="dropdown-item" href="#">Register</a></li>
         {% endif %}
 
