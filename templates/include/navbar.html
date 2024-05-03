@@ -30,11 +30,11 @@
 
       <ul class="dropdown-menu dropdown-menu-end">
         {% if user %}
-          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><a class="dropdown-item" href="/me">Profile</a></li>
           <li><a class="dropdown-item" href="/logout">Logout</a></li>
         {% else %}
           <li><a class="dropdown-item" href="/login">Login</a></li>
-          <li><a class="dropdown-item" href="#">Register</a></li>
+          <li><a class="dropdown-item" href="/register">Register</a></li>
         {% endif %}
 
       </ul>

@@ -66,7 +66,8 @@ async def get_current_user(request: Request,
 
 @router.get("/login", response_class=HTMLResponse)
 async def get_login(request: Request):
-    return templates.TemplateResponse("user/login.html", {"request": request})
+    return templates.TemplateResponse("user/login.html",
+                                      {"request": request})
 
 
 @router.post("/login")
@@ -81,7 +82,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(data={"sub": user.username})
-    # response = JSONResponse(content={"token_type": "bearer"})
 
     response = RedirectResponse(url="/",
                                 status_code=status.HTTP_302_FOUND
@@ -119,7 +119,7 @@ async def logout_user(response: Response):
 #     return {"message": "Successfully logged out"}
 
 
-@router.post("/me")
+@router.get("/me")
 async def get_me(request: Request,
                  db: AsyncSession = Depends(get_session)):
     user = await get_current_user(request, db)
