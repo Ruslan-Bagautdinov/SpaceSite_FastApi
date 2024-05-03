@@ -1,4 +1,9 @@
+from fastapi import (HTTPException,
+                     status)
+
+
 from passlib.context import CryptContext
+
 from datetime import datetime, timedelta
 from jwt import encode, decode
 from base64 import b64encode, b64decode
@@ -7,6 +12,12 @@ from app.config import ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
 
 def verify_password(plain_password, hashed_password):
@@ -30,3 +41,6 @@ def decode_token(token):
     token = token.replace("Bearer ", "")
     access_token = b64decode(token).decode('utf-8')
     return decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+
+
+

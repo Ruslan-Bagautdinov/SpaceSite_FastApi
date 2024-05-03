@@ -4,7 +4,7 @@ from fastapi import (APIRouter,
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.postgre_db import get_session
-from app.routers.users import get_current_user, credentials_exception
+from app.routers.login import get_current_user, credentials_exception
 
 
 router = APIRouter(tags=['protected'])

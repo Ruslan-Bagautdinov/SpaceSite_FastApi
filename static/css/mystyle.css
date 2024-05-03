@@ -1,0 +1,8 @@
+/* Custom styles for the sticky sidebar */
+.offcanvas-start {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 48px; /* Height of the navbar */
+    height: calc(100vh - 48px); /* Full height minus the height of the navbar */
+    overflow-y: auto; /* Add a scrollbar if the content overflows */
+}
