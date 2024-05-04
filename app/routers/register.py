@@ -7,6 +7,7 @@ from fastapi import (APIRouter,
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.postgre_db import get_session
@@ -27,9 +28,9 @@ async def register_user(request: Request):
 
 
 @router.post("/register", response_model=User)
-async def register_user(username: str = Form(...),
-                        email: str = Form(...),
-                        password: str = Form(...),
+async def register_user(username: Annotated[str, Form()],
+                        email: Annotated[str, Form()],
+                        password: Annotated[str, Form()],
                         db: AsyncSession = Depends(get_session)
                         ):
     db_user = await get_user_by_username(db, username=username)

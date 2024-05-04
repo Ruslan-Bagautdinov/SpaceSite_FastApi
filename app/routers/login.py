@@ -7,7 +7,6 @@ from fastapi import (APIRouter,
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from starlette.exceptions import HTTPException
 
 
 from sqlalchemy.ext.asyncio import AsyncSession
