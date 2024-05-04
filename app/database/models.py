@@ -14,3 +14,8 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(index=True, nullable=True)
     phone_number: Mapped[str] = mapped_column(index=True, nullable=True)
     photo: Mapped[str] = mapped_column(index=True, nullable=True)
+    first_name: Mapped[str] = mapped_column(index=True, nullable=True)
+    last_name: Mapped[str] = mapped_column(index=True, nullable=True)
+    phone_number: Mapped[str] = mapped_column(index=True, nullable=True)
+    photo: Mapped[str] = mapped_column(index=True, nullable=True)
+
