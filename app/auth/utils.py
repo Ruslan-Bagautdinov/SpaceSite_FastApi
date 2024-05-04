@@ -41,6 +41,3 @@ def decode_token(token):
     token = token.replace("Bearer ", "")
     access_token = b64decode(token).decode('utf-8')
     return decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
-
-
-

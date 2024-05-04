@@ -37,3 +37,7 @@ async def authenticate_user(db: AsyncSession, username: str, password: str):
     if not verify_password(password, user.hashed_password):
         return False
     return user
+
+
+async def update_user(db: AsyncSession, user: User):
+    pass

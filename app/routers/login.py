@@ -5,7 +5,7 @@ from fastapi import (APIRouter,
                      Request,
                      Response)
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 
@@ -98,8 +98,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return response
 
 
-
-
 @router.get("/logout")
 async def logout_user(response: Response):
     response.delete_cookie("access_token")
@@ -118,8 +116,4 @@ async def logout_user(response: Response):
 #     return {"message": "Successfully logged out"}
 
 
-@router.get("/me")
-async def get_me(request: Request,
-                 db: AsyncSession = Depends(get_session)):
-    user = await get_current_user(request, db)
-    return user
+

@@ -1,5 +1,8 @@
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (AsyncSession,
+                                    async_sessionmaker,
+                                    create_async_engine)
 from sqlalchemy.orm import declarative_base
+
 
 from app.config import PG_DB_USER, PG_DB_PASSWORD, PG_DB_HOST, PG_DB_NAME
 

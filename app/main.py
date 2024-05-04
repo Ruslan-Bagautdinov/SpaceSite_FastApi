@@ -4,17 +4,27 @@ from fastapi.templating import Jinja2Templates
 
 from contextlib import asynccontextmanager
 
-from app.database.postgre_db import engine, Base
+from alembic.config import Config
+from alembic import command
+import asyncio
+from alembic.runtime.migration import MigrationContext
+
+from app.database.postgre_db import engine, get_session
 from app.routers.root import router as root_router
 from app.routers.register import router as register_router
 from app.routers.login import router as login_router
-from app.routers.protected import router as protected_router
+from app.routers.user import router as user_router
 
 
+# async def create_tables():
+#     async with engine.begin() as conn:
+#         await conn.run_sync(Base.metadata.create_all)
 
-async def create_tables():
+
+async def run_migrations():
+    alembic_cfg = Config("alembic.ini")
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(lambda sync_conn: command.upgrade(alembic_cfg, "head"))
 
 
 async def shutdown():
@@ -24,7 +34,7 @@ async def shutdown():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await create_tables()
+    await run_migrations()
     yield
     await shutdown()
 
@@ -37,4 +47,4 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(root_router)
 app.include_router(register_router)
 app.include_router(login_router)
-app.include_router(protected_router)
+app.include_router(user_router)
