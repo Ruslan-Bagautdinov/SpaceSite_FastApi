@@ -3,6 +3,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from contextlib import asynccontextmanager
+import sys
+from subprocess import check_output
+from datetime import datetime
+from time import sleep
 
 
 from app.routers.root import router as root_router
@@ -11,17 +15,23 @@ from app.routers.login import router as login_router
 from app.routers.user import router as user_router
 
 
-# async def create_tables():
-#     async with engine.begin() as conn:
-#         await conn.run_sync(Base.metadata.create_all)
-
-
-
-
+def run_migration_at_start():
+    print("Current OS:", sys.platform)
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    output = check_output(
+        f'alembic revision --autogenerate -m f"{now}" ',
+        shell=True).decode()
+    print(output)
+    # sleep(5)
+    output = check_output(
+        f'alembic upgrade head ',
+        shell=True).decode()
+    print(output)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    run_migration_at_start()
     yield
 
 

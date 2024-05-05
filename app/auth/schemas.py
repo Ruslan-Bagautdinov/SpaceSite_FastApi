@@ -25,6 +25,7 @@ class UserProfileUpdate(User):
     last_name: str
     phone_number: str
     photo: str
+    ass_size: str
 
 
 class TokenData(BaseModel):
