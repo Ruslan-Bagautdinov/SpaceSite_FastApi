@@ -14,8 +14,7 @@ from jwt import PyJWTError
 
 from app.database.postgre_db import get_session
 from app.auth.schemas import TokenData
-from app.database.crud import (get_user,
-                               get_user_by_username,
+from app.database.crud import (get_user_by_username,
                                authenticate_user)
 from app.auth.utils import decode_token, create_access_token
 
@@ -45,16 +44,16 @@ async def get_current_user(request: Request,
                            db: AsyncSession = Depends(get_session)):
 
     cookie_sub = await check_if_logged(request)
+    username = cookie_sub.get('username')
 
     if cookie_sub:
-        token_data = TokenData(username=cookie_sub['username'])
 
-        user = await get_user_by_username(db, username=token_data.username)
+        user = await get_user_by_username(db, username=username)
         if user is None:
             return None
 
-        user_data = await get_user(db, user.id)
-        return user_data
+        # user_data = await get_user(db, user.id)
+        return user
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -64,9 +63,11 @@ async def get_current_user(request: Request,
 
 
 @router.get("/login", response_class=HTMLResponse)
-async def get_login(request: Request):
+async def get_login(request: Request,
+                    user: TokenData | None = Depends(check_if_logged)):
     return templates.TemplateResponse("user/login.html",
-                                      {"request": request})
+                                      {"request": request,
+                                       "user": user})
 
 
 @router.post("/login")
@@ -108,12 +109,3 @@ async def logout_user(response: Response):
                                                    "Expires=Thu, 01 Jan 1970 00:00:00 GMT"
                                      }
                             )
-
-
-# @router.post("/logout")
-# async def logout_user(response: Response):
-#     response.delete_cookie("access_token")
-#     return {"message": "Successfully logged out"}
-
-
-

@@ -11,9 +11,9 @@ Root
 {% block page_content %}
 
 {% if user %}
-    {{ user.username }}, {{ data }} !!!
+    {{ user.username }}, {{ top_message }} !!!
 {% else %}
-    Stranger, {{ data }} !!!
+    Stranger, {{ top_message }} !!!
 {% endif %}
 
     <h1>pook</h1>
