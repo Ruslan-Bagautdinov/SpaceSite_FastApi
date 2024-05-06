@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.postgre_db import get_session
 from app.auth.schemas import UserCreate, TokenData, User
 from app.auth.utils import create_access_token
-from app.routers.login import check_if_logged
+from app.routers.login import check_user
 from app.database.crud import (create_user,
                                get_user_by_username)
 
@@ -24,7 +24,7 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get('/register', response_class=HTMLResponse)
 async def register_user(request: Request,
-                        user: TokenData | None = Depends(check_if_logged)
+                        user: TokenData | None = Depends(check_user)
                         ):
     return templates.TemplateResponse("user/register.html",
                                       {"request": request,

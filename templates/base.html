@@ -21,10 +21,51 @@
   </head>
   <body>
     {% include 'include/navbar.html' %}
-    <!-- Page Content  -->
 
-    {% block page_content %}
-    {% endblock %}
+    <div class="page_content">
+
+
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-0 col-sm-1"
+          style="display: block">
+            <span></span>
+          </div>
+
+          <div class="col-12 col-sm-10">
+            {% block form_content %}
+            {% endblock %}
+          </div>
+
+          <div class="col-0 col-sm-1"
+          style="display: block">
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-0 col-sm-1"
+          style="display: block">
+            <span></span>
+          </div>
+
+          <div class="col-12 col-sm-10">
+            {% block page_content %}
+            {% endblock %}
+          </div>
+
+          <div class="col-0 col-sm-1"
+          style="display: block">
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Page Content  -->
 
     <div class="overlay"></div>
 

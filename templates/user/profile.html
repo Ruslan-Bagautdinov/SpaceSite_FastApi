@@ -1,38 +1,76 @@
 {% extends "base.html" %}
+{% block title %} Profile page {% endblock %}
+{% block head %} {{ super() }} {% endblock %}
 
-{% block title %}
-Login page
-{% endblock %}
+{% block form_content %}
+  <form action="/profile/{{ profile.user_id }}/update" method="post">
+    <legend>Your profile</legend>
 
-{% block head %}
-    {{ super() }}
+    <div class="row">
+      <div class="col">
+        <legend>Username: {{ profile.username }}</legend>
+      </div>
+      <div class="col">
+        <legend>Email: {{ profile.email }}</legend>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="first_name" class="form-label">First name:</label>
+        <input
+          class="form-control"
+          type="text"
+          id="first_name"
+          name="first_name"
+          value="{{ profile.first_name if profile.first_name is not none else 'Enter your first name' }}"
+        />
+      </div>
+      <div class="col">
+        <label for="last_name" class="form-label">Last name:</label>
+        <input
+          class="form-control"
+          type="text"
+          id="last_name"
+          name="last_name"
+          value="{{ profile.last_name if profile.last_name is not none else 'Enter your last name' }}"
+        />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="phone_number" class="form-label">Phone Number:</label>
+      <input
+        class="form-control"
+        type="tel"
+        id="phone_number"
+        name="phone_number"
+        value="{{ profile.phone_number if profile.phone_number is not none else 'Enter your phone number' }}"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="photo" class="form-label">Photo:</label>
+      <input class="form-control" type="file" id="photo" name="photo" />
+    </div>
+
+    <div class="mb-3">
+      <label for="ass_size" class="form-label">Ass size:</label>
+      <input
+        class="form-control"
+        type="number"
+        id="ass_size"
+        name="ass_size"
+        value="{{ profile.ass_size if profile.ass_size is not none else 'Enter your ass size' }}"
+      />
+    </div>
+
+    <div class="mb-3">
+      <input type="submit" class="btn btn-dark" value="Save" />
+    </div>
+  </form>
 {% endblock %}
 
 {% block page_content %}
-<h2>Your profile</h2>
-    <h4>Username: {{ profile.username }}</h4>
-    <h4>Email: {{ profile.email }}</h4>
-
-    <form action="/profile/{{ profile.user_id }}/update" method="post">
-        <label for="first_name">First name:</label>
-        <input type="text" id="first_name" name="first_name" value="{{ profile.first_name if profile.first_name is not none else 'Enter your first name' }}">
-        <br>
-        <label for="last_name">Last name:</label>
-        <input type="text" id="last_name" name="last_name" value="{{ profile.last_name if profile.last_name is not none else 'Enter your last name' }}">
-        <br>
-        <label for="phone_number">Phone Number:</label>
-        <input type="tel" id="phone_number" name="phone_number" value="{{ profile.phone_number if profile.phone_number is not none else 'Enter your phone number' }}">
-        <br>
-        <label for="photo">Photo:</label>
-        <input type="file" id="photo" name="photo">
-        <br>
-        <label for="ass_size">Ass size:</label>
-        <input type="number" id="ass_size" name="ass_size" value="{{ profile.ass_size if profile.ass_size is not none else 'Enter your ass size' }}">
-        <br>
-        <input type="submit" value="Submit">
-    </form>
 {% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-{% endblock %}
+{% block scripts %} {{ super() }} {% endblock %}

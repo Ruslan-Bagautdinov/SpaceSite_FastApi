@@ -18,7 +18,7 @@ from app.database.crud import (get_user,
                                get_user_by_username,
                                update_user_profile)
 
-from app.routers.login import check_if_logged
+from app.routers.login import check_user
 from app.auth.schemas import TokenData, User, UserProfileUpdate
 
 
@@ -36,7 +36,7 @@ def no_access():
 
 @router.get("/me")
 async def get_me(db: AsyncSession = Depends(get_session),
-                 user: TokenData | None = Depends(check_if_logged)):
+                 user: TokenData | None = Depends(check_user)):
 
     if user is None:
         no_access()
@@ -52,7 +52,7 @@ async def get_me(db: AsyncSession = Depends(get_session),
 async def get_profile(request: Request,
                       user_id: int,
                       db: AsyncSession = Depends(get_session),
-                      user: TokenData | None = Depends(check_if_logged)
+                      user: TokenData | None = Depends(check_user)
                       ):
 
     if user is None:
@@ -85,7 +85,7 @@ async def register_user(user_id: int,
                         photo: Optional[str] = Form(None),
                         ass_size: Optional[str] = Form(None),
                         db: AsyncSession = Depends(get_session),
-                        user: User | None = Depends(check_if_logged)
+                        user: User | None = Depends(check_user)
                         ):
 
     if user is None:

@@ -1,52 +1,12 @@
 {% extends "base.html" %}
-
-{% block title %}
-Root
-{% endblock %}
-
-{% block head %}
-    {{ super() }}
-{% endblock %}
-
+{% block title %} Root {% endblock %}
+{% block head %} {{ super() }} {% endblock %}
 {% block page_content %}
-
-{% if user %}
+    {% if user %}
     {{ user.username }}, {{ top_message }} !!!
-{% else %}
-    Stranger, {{ top_message }} !!!
-{% endif %}
-
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
-    <h1>pook</h1>
+    {% else %} Stranger, {{ top_message }}!!!
+    {% endif %}
+    {% block form_content %}
+    {% endblock %}
 {% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-{% endblock %}
+{% block scripts %} {{ super() }} {% endblock %}

@@ -5,10 +5,14 @@ from fastapi import (HTTPException,
 from passlib.context import CryptContext
 
 from datetime import datetime, timedelta
-from jwt import encode, decode
+from jwt import encode, decode, ExpiredSignatureError, InvalidTokenError
 from base64 import b64encode, b64decode
 
-from app.config import ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
+from app.config import (ALGORITHM,
+                        SECRET_KEY,
+                        ACCESS_TOKEN_EXPIRE_MINUTES,
+                        REFRESH_TOKEN_EXPIRE_MINUTES
+                        )
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -28,16 +32,54 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+def create_token(user_name: str, token_type: str, expire_delta: str):
+
+    data = {
+            "user_name": user_name,
+            "exp": datetime.utcnow() + timedelta(minutes=eval(expire_delta)),
+            "type": token_type
+    }
+
+    encoded_jwt = encode(data, SECRET_KEY, algorithm=ALGORITHM)
     encoded_token = b64encode(encoded_jwt).decode('utf-8')
     return encoded_token
 
 
+def create_access_token(user_name: str):
+    return create_token(user_name, "access_token", ACCESS_TOKEN_EXPIRE_MINUTES)
+
+
+def create_refresh_token(user_name: str):
+    return create_token(user_name, "refresh_token", REFRESH_TOKEN_EXPIRE_MINUTES)
+
+
 def decode_token(token):
     token = token.replace("Bearer ", "")
-    access_token = b64decode(token).decode('utf-8')
-    return decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+    token = b64decode(token).decode('utf-8')
+    return decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+
+def verify_token(token: str):
+    try:
+        payload = decode_token(token)
+        if payload['type'] == 'access_token':
+            return payload['user_name']
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token type")
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
+    except InvalidTokenError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+
+def refresh_access_token(refresh_token: str):
+    try:
+        payload = decode_token(refresh_token)
+        if payload['type'] == 'refresh_token':
+            user_name = payload['user_name']
+            new_access_token = create_access_token(user_name)
+            return new_access_token
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token type")
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token expired")
+    except InvalidTokenError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
