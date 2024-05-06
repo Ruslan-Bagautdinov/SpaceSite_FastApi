@@ -14,6 +14,7 @@ from app.auth.schemas import TokenData, User, UserProfileUpdate
 from app.auth.middleware import check_user
 from app.database.postgre_db import get_session
 from app.database.crud import (get_user,
+                               get_user_profile,
                                get_user_by_username,
                                update_user_profile)
 
@@ -39,18 +40,24 @@ async def get_profile(request: Request,
                       db: AsyncSession = Depends(get_session),
                       user: TokenData | None = Depends(check_user)
                       ):
+    result_user = await get_user(db, user_id)
 
-    result = await get_user(db, user_id)
     profile = {
-        'username': result.username,
-        'email': result.email,
-        'first_name': result.first_name,
-        'last_name': result.last_name,
-        'photo': result.photo,
-        'phone_number': result.phone_number,
-        'ass_size': result.ass_size,
-        'user_id': user_id,
-    }
+        'user_id': result_user.user_id,
+        'username': result_user.username,
+        'email': result_user.email}
+
+    result_profile = await get_user_profile(db, user_id)
+
+    profile_addon = {
+        'first_name': result_profile.first_name,
+        'last_name': result_profile.last_name,
+        'photo': result_profile.photo,
+        'phone_number': result_profile.phone_number,
+        'ass_size': result_profile.ass_size}
+
+    profile.update(profile_addon)
+
     return templates.TemplateResponse("user/profile.html",
                                       {"request": request,
                                        "user": user,
@@ -59,16 +66,16 @@ async def get_profile(request: Request,
 
 
 @router.post("/profile/{user_id}/update", response_model=UserProfileUpdate)
-async def register_user(user_id: int,
-                        request: Request,
-                        first_name: Optional[str] = Form(None),
-                        last_name: Optional[str] = Form(None),
-                        phone_number: Optional[str] = Form(None),
-                        photo: Optional[str] = Form(None),
-                        ass_size: Optional[str] = Form(None),
-                        db: AsyncSession = Depends(get_session),
-                        user: User | None = Depends(check_user)
-                        ):
+async def update_profile(user_id: int,
+                         request: Request,
+                         first_name: Optional[str] = Form(None),
+                         last_name: Optional[str] = Form(None),
+                         phone_number: Optional[str] = Form(None),
+                         photo: Optional[str] = Form(None),
+                         ass_size: Optional[str] = Form(None),
+                         db: AsyncSession = Depends(get_session),
+                         user: User | None = Depends(check_user)
+                         ):
 
     user_id = user_id
     user_profile = UserProfileUpdate(first_name=first_name,

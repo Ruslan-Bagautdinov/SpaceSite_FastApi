@@ -2,9 +2,14 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.models import User
+from app.database.models import User, UserProfile
 from app.auth.schemas import UserCreate, UserProfileUpdate
 from app.auth.utils import get_password_hash, verify_password
+
+
+async def get_user_by_username(db: AsyncSession, username: str):
+    result = await db.execute(select(User).where(User.username == username))
+    return result.scalar_one_or_none()
 
 
 async def get_user(db: AsyncSession, user_id: int):
@@ -12,9 +17,20 @@ async def get_user(db: AsyncSession, user_id: int):
     return result
 
 
-async def get_user_by_username(db: AsyncSession, username: str):
-    result = await db.execute(select(User).where(User.username == username))
-    return result.scalar_one_or_none()
+async def get_user_profile(db: AsyncSession, user_id: int):
+    user_profile = await db.get(UserProfile, user_id)
+    return user_profile
+
+
+# async def create_user(db: AsyncSession, user: UserCreate):
+#     hashed_password = get_password_hash(user.password)
+#     db_user = User(username=user.username,
+#                    hashed_password=hashed_password,
+#                    email=user.email)
+#     db.add(db_user)
+#     await db.commit()
+#     await db.refresh(db_user)
+#     return db_user
 
 
 async def create_user(db: AsyncSession, user: UserCreate):
@@ -23,6 +39,9 @@ async def create_user(db: AsyncSession, user: UserCreate):
                    hashed_password=hashed_password,
                    email=user.email)
     db.add(db_user)
+    await db.flush()
+    db_user_profile = UserProfile(user_id=db_user.id)
+    db.add(db_user_profile)
     await db.commit()
     await db.refresh(db_user)
     return db_user
@@ -38,7 +57,7 @@ async def authenticate_user(db: AsyncSession, username: str, password: str):
 
 
 async def update_user_profile(db: AsyncSession, user_id: int, user_profile: UserProfileUpdate):
-    result = await db.execute(select(User).where(User.id == user_id))
+    result = await db.execute(select(UserProfile).where(UserProfile.id == user_id))
     db_user = result.scalars().first()
     if db_user:
         if user_profile.first_name is not None:
