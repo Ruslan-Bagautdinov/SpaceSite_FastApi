@@ -10,17 +10,13 @@ from fastapi.templating import Jinja2Templates
 
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from jwt import PyJWTError
 
 from app.database.postgre_db import get_session
 from app.auth.schemas import TokenData
-from app.database.crud import (get_user_by_username,
-                               authenticate_user)
-from app.auth.utils import (decode_token,
-                            verify_token,
-                            create_access_token,
+from app.database.crud import (authenticate_user)
+from app.auth.utils import (create_access_token,
                             create_refresh_token)
-
+from app.auth.middleware import check_user
 
 router = APIRouter(tags=['user login'])
 
@@ -41,20 +37,6 @@ templates = Jinja2Templates(directory="templates")
 #             return {'username': username}
 #     except PyJWTError:
 #         return None
-
-async def check_user(request: Request):
-    access_token = request.cookies.get("access_token")
-
-    if access_token is None:
-        return None
-    try:
-        username = verify_token(access_token)
-        return {'username': username}
-    except HTTPException:
-        return None
-    except PyJWTError:
-        return None
-
 
 
 # async def get_current_user(request: Request,
