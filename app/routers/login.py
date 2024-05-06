@@ -15,7 +15,8 @@ from app.database.postgre_db import get_session
 from app.auth.schemas import TokenData
 from app.database.crud import (authenticate_user)
 from app.auth.utils import (create_access_token,
-                            create_refresh_token)
+                            create_refresh_token,
+                            authenticated_root_redirect)
 from app.auth.middleware import check_user
 
 router = APIRouter(tags=['user login'])
@@ -80,29 +81,31 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = create_access_token(user.username)
-    refresh_token = create_refresh_token(user.username)
+    # access_token = create_access_token(user.username)
+    # refresh_token = create_refresh_token(user.username)
+    #
+    # response = RedirectResponse(url="/",
+    #                             status_code=status.HTTP_302_FOUND
+    #                             )
+    #
+    # response.set_cookie(
+    #     "access_token",
+    #     value=f"Bearer {access_token}",
+    #     httponly=True,
+    #     secure=False,
+    #     samesite='lax'
+    # )
+    #
+    # response.set_cookie(
+    #     "refresh_token",
+    #     value=f"Bearer {refresh_token}",
+    #     httponly=True,
+    #     secure=False,
+    #     samesite='lax'
+    # )
+    # return response
 
-    response = RedirectResponse(url="/",
-                                status_code=status.HTTP_302_FOUND
-                                )
-
-    response.set_cookie(
-        "access_token",
-        value=f"Bearer {access_token}",
-        httponly=True,
-        secure=False,
-        samesite='lax'
-    )
-
-    response.set_cookie(
-        "refresh_token",
-        value=f"Bearer {refresh_token}",
-        httponly=True,
-        secure=False,
-        samesite='lax'
-    )
-    return response
+    return authenticated_root_redirect(user.username)
 
 
 @router.get("/logout")

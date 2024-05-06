@@ -1,7 +1,6 @@
 from fastapi import (HTTPException,
                      status)
-
-
+from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
 
 from datetime import datetime, timedelta
@@ -83,3 +82,29 @@ def refresh_access_token(refresh_token: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token expired")
     except InvalidTokenError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+
+
+def authenticated_root_redirect(username: str):
+    access_token = create_access_token(username)
+    refresh_token = create_refresh_token(username)
+
+    response = RedirectResponse(url="/",
+                                status_code=status.HTTP_302_FOUND
+                                )
+
+    response.set_cookie(
+        "access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,
+        secure=False,
+        samesite='lax'
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        value=f"Bearer {refresh_token}",
+        httponly=True,
+        secure=False,
+        samesite='lax'
+    )
+    return response

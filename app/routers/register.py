@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.postgre_db import get_session
 from app.auth.schemas import UserCreate, TokenData, User
-from app.auth.utils import create_access_token
+from app.auth.utils import authenticated_root_redirect
 from app.routers.login import check_user
 from app.database.crud import (create_user,
                                get_user_by_username)
@@ -46,19 +46,28 @@ async def register_user(username: Annotated[str, Form()],
 
     await create_user(db=db, user=user)
 
-    access_token = create_access_token(data={"sub": user.username})
+    # access_token = create_access_token(user.username)
+    # refresh_token = create_refresh_token(user.username)
+    #
+    # response = RedirectResponse(url="/",
+    #                             status_code=status.HTTP_302_FOUND
+    #                             )
+    #
+    # response.set_cookie(
+    #     "access_token",
+    #     value=f"Bearer {access_token}",
+    #     httponly=True,
+    #     secure=False,
+    #     samesite='lax'
+    # )
+    #
+    # response.set_cookie(
+    #     "refresh_token",
+    #     value=f"Bearer {refresh_token}",
+    #     httponly=True,
+    #     secure=False,
+    #     samesite='lax'
+    # )
+    # return response
 
-    response = RedirectResponse(url="/",
-                                status_code=status.HTTP_302_FOUND
-                                )
-
-    response.set_cookie(
-        "access_token",
-        value=f"Bearer {access_token}",
-        httponly=True,
-        secure=False,
-        samesite='lax',
-        max_age=1800,
-        expires=1800,
-    )
-    return response
+    return authenticated_root_redirect(user.username)

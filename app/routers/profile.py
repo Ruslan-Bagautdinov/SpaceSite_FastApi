@@ -43,7 +43,7 @@ async def get_profile(request: Request,
     result_user = await get_user(db, user_id)
 
     profile = {
-        'user_id': result_user.user_id,
+        'user_id': result_user.id,
         'username': result_user.username,
         'email': result_user.email}
 
