@@ -18,6 +18,8 @@ from app.database.crud import (get_user,
                                get_user_by_username,
                                update_user_profile)
 
+from templates.icons.icons import OK_ICON
+
 
 router = APIRouter(tags=['user profile'])
 templates = Jinja2Templates(directory="templates")
@@ -86,7 +88,12 @@ async def update_profile(user_id: int,
 
     await update_user_profile(db, user_id, user_profile)
 
-    top_message = 'your data successfully registered'
+    top_message = {
+        "class": "alert alert-success rounded",
+        "icon": OK_ICON,
+        "text": "your data successfully registered"
+    }
+
     return templates.TemplateResponse("root.html",
                                       {"request": request,
                                        "top_message": top_message,

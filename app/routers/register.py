@@ -46,28 +46,4 @@ async def register_user(username: Annotated[str, Form()],
 
     await create_user(db=db, user=user)
 
-    # access_token = create_access_token(user.username)
-    # refresh_token = create_refresh_token(user.username)
-    #
-    # response = RedirectResponse(url="/",
-    #                             status_code=status.HTTP_302_FOUND
-    #                             )
-    #
-    # response.set_cookie(
-    #     "access_token",
-    #     value=f"Bearer {access_token}",
-    #     httponly=True,
-    #     secure=False,
-    #     samesite='lax'
-    # )
-    #
-    # response.set_cookie(
-    #     "refresh_token",
-    #     value=f"Bearer {refresh_token}",
-    #     httponly=True,
-    #     secure=False,
-    #     samesite='lax'
-    # )
-    # return response
-
     return authenticated_root_redirect(user.username)

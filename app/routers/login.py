@@ -24,44 +24,6 @@ router = APIRouter(tags=['user login'])
 templates = Jinja2Templates(directory="templates")
 
 
-# async def check_user(request: Request):
-#     access_token = request.cookies.get("access_token")
-#
-#     if access_token is None:
-#         return None
-#     try:
-#         payload = decode_token(access_token)
-#         username: str = payload.get("sub")
-#         if username is None:
-#             return None
-#         else:
-#             return {'username': username}
-#     except PyJWTError:
-#         return None
-
-
-# async def get_current_user(request: Request,
-#                            db: AsyncSession = Depends(get_session)):
-#
-#     cookie_sub = await check_user(request)
-#     username = cookie_sub.get('username')
-#
-#     if cookie_sub:
-#
-#         user = await get_user_by_username(db, username=username)
-#         if user is None:
-#             return None
-#
-#         # user_data = await get_user(db, user.id)
-#         return user
-#     else:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Please log in to access this page",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-
-
 @router.get("/login", response_class=HTMLResponse)
 async def get_login(request: Request,
                     user: TokenData | None = Depends(check_user)):
@@ -81,29 +43,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    # access_token = create_access_token(user.username)
-    # refresh_token = create_refresh_token(user.username)
-    #
-    # response = RedirectResponse(url="/",
-    #                             status_code=status.HTTP_302_FOUND
-    #                             )
-    #
-    # response.set_cookie(
-    #     "access_token",
-    #     value=f"Bearer {access_token}",
-    #     httponly=True,
-    #     secure=False,
-    #     samesite='lax'
-    # )
-    #
-    # response.set_cookie(
-    #     "refresh_token",
-    #     value=f"Bearer {refresh_token}",
-    #     httponly=True,
-    #     secure=False,
-    #     samesite='lax'
-    # )
-    # return response
 
     return authenticated_root_redirect(user.username)
 

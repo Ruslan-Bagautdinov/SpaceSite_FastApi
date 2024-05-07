@@ -2,11 +2,17 @@
 {% block title %} Root {% endblock %}
 {% block head %} {{ super() }} {% endblock %}
 {% block page_content %}
-    {% if user %}
-    {{ user.username }}, {{ top_message }} !!!
-    {% else %} Stranger, {{ top_message }}!!!
-    {% endif %}
+
+    <div class="{{ top_message.class }}" role="alert">
+        {{ top_message.icon | safe  }}
+        {% if user %}
+        {{ user.username }}, {{ top_message.text }}  !!!
+        {% else %} Unregistered user, {{ top_message.text }}!!!
+        {% endif %}
+    </div>
+
     {% block form_content %}
     {% endblock %}
+
 {% endblock %}
 {% block scripts %} {{ super() }} {% endblock %}
