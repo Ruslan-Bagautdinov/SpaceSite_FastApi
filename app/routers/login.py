@@ -48,13 +48,34 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.get("/logout")
-async def logout_user(response: Response):
-    response.delete_cookie("access_token")
-    response.delete_cookie("refresh_token")
-    return RedirectResponse(url="/",
-                            status_code=status.HTTP_302_FOUND,
-                            headers={"Set-Cookie": "access_token=; "
-                                                   "Path=/; "
-                                                   "Expires=Thu, 01 Jan 1970 00:00:00 GMT"
-                                     }
-                            )
+async def logout_user():
+    # Create a RedirectResponse to redirect the user to the home page
+    response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+
+    # Delete the access token cookie by setting its expiration time to a past date
+    response.set_cookie(
+        "access_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+
+    # Delete the refresh token cookie by setting its expiration time to a past date
+    response.set_cookie(
+        "refresh_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+
+    return response

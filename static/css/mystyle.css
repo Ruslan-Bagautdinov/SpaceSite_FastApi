@@ -6,14 +6,44 @@ html, body {
 
 body.light-theme {
   background-color: #fff;
-  color: #000;
+  color: #000; /* This is the default text color for light theme */
 }
 
+body.light-theme .custom-navbar {
+  background-color: #f8f9fa; /* This is the default light background color for navbar-light */
+  color: #212529; /* This is the default dark text color for navbar-light */
+}
+
+/* Define styles for the dark theme */
 body.dark-theme {
   background-color: #121212;
   color: #fff;
 }
 
+body.dark-theme .custom-navbar {
+  background-color: #343a40; /* This is the default dark background color for navbar-dark */
+  color: #fff; /* This is the default light text color for navbar-dark */
+}
+
+/* Additional styles to ensure text color is readable in light theme */
+body.light-theme .custom-navbar .navbar-brand,
+body.light-theme .custom-navbar .nav-link {
+  color: #212529; /* Adjust this to a darker color for better readability */
+}
+
+/* Additional styles to change the navbar-toggler color in light theme */
+body.light-theme .custom-navbar .navbar-toggler {
+  color: #212529; /* Set the color of the toggler icon */
+  border-color: #212529; /* Set the color of the toggler border */
+}
+
+body.light-theme .custom-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* Set the color of the toggler icon */
+}
+
+.theme-toggle.active {
+  font-weight: bold;
+}
 
 .page_content {
     height: 100%;
