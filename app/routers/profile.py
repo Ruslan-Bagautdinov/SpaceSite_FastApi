@@ -3,12 +3,16 @@ from fastapi import (APIRouter,
                      status,
                      Request,
                      Form,
+                     UploadFile,
+                     File,
                      HTTPException)
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional
+import os
+
 
 
 from app.auth.schemas import TokenData, UserProfileUpdate
@@ -19,6 +23,8 @@ from app.database.crud import (get_user,
                                get_user_by_username,
                                update_user_profile,
                                delete_user)
+from app.config import IMAGE_DIR
+from app.tools.async_upload import save_upload_file
 
 from templates.icons.icons import OK_ICON, USER_DELETE_ICON
 
@@ -75,16 +81,39 @@ async def update_profile(request: Request,
                          first_name: Optional[str] = Form(None),
                          last_name: Optional[str] = Form(None),
                          phone_number: Optional[str] = Form(None),
-                         photo: Optional[str] = Form(None),
+                         photo: Optional[UploadFile] = File(None),
                          ass_size: Optional[str] = Form(None),
                          db: AsyncSession = Depends(get_session)
                          ):
+    user_profile = await get_user_profile(db, user_id)
+    if not user_profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
 
-    user_id = user_id
+    # Check if the user has a previous photo
+    previous_photo_path = user_profile.photo
+    if photo:
+        # Check if the file is an image
+        if photo.content_type not in ['image/jpeg', 'image/png']:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="File must be an image")
+
+        # Save the new image to the file system
+        file_location = f"{IMAGE_DIR}/{photo.filename}"
+        await save_upload_file(photo, file_location)
+
+        # Update the user's profile with the new photo path
+        # user_profile.photo = file_location
+
+        # Delete the previous photo if it exists
+        if previous_photo_path and os.path.exists(previous_photo_path):
+            os.remove(previous_photo_path)
+    else:
+        # If no new photo is uploaded, keep the old photo path
+        file_location = previous_photo_path
+
     user_profile = UserProfileUpdate(first_name=first_name,
                                      last_name=last_name,
                                      phone_number=phone_number,
-                                     photo=photo,
+                                     photo=file_location,
                                      ass_size=ass_size)
 
     await update_user_profile(db, user_id, user_profile)

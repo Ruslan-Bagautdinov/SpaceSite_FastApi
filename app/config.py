@@ -1,4 +1,4 @@
-from os import getenv
+from os import getenv, path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,3 +14,5 @@ PG_DB_USER = getenv('PG_DB_USER')
 PG_DB_PASSWORD = getenv('PG_DB_PASSWORD')
 PG_DB_NAME = getenv('PG_DB_NAME')
 
+BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
+IMAGE_DIR = path.join(BASE_DIR, 'photo')

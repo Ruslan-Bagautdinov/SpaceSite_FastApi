@@ -3,7 +3,7 @@
 {% block head %} {{ super() }} {% endblock %}
 
 {% block form_content %}
-  <form action="/protected/profile/{{ profile.user_id }}/update" method="post">
+  <form action="/protected/profile/{{ profile.user_id }}/update" method="post" enctype="multipart/form-data">
     <legend>Your profile</legend>
 
     <div class="row">
