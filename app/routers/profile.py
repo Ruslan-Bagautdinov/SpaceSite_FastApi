@@ -12,7 +12,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 import os
-
+import base64
 
 
 from app.auth.schemas import TokenData, UserProfileUpdate
@@ -51,6 +51,8 @@ async def get_profile(request: Request,
                       user: TokenData | None = Depends(check_user)
                       ):
     result_user = await get_user(db, user_id)
+    if not result_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     profile = {
         'user_id': result_user.id,
@@ -58,15 +60,26 @@ async def get_profile(request: Request,
         'email': result_user.email}
 
     result_profile = await get_user_profile(db, user_id)
+    if not result_profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
 
     profile_addon = {
         'first_name': result_profile.first_name,
         'last_name': result_profile.last_name,
-        'photo': result_profile.photo,
         'phone_number': result_profile.phone_number,
         'ass_size': result_profile.ass_size}
 
     profile.update(profile_addon)
+
+    if result_profile.photo:
+        try:
+            with open(result_profile.photo, 'rb') as photo_file:
+                photo_data = photo_file.read()
+                photo_base64 = base64.b64encode(photo_data).decode('utf-8')
+                profile['photo'] = photo_base64
+        except FileNotFoundError:
+            # Handle the case where the photo file is not found
+            profile['photo'] = None
 
     return templates.TemplateResponse("user/profile.html",
                                       {"request": request,
@@ -89,25 +102,17 @@ async def update_profile(request: Request,
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
 
-    # Check if the user has a previous photo
     previous_photo_path = user_profile.photo
-    if photo:
-        # Check if the file is an image
+    if photo and photo.filename:
         if photo.content_type not in ['image/jpeg', 'image/png']:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="File must be an image")
 
-        # Save the new image to the file system
         file_location = f"{IMAGE_DIR}/{photo.filename}"
         await save_upload_file(photo, file_location)
 
-        # Update the user's profile with the new photo path
-        # user_profile.photo = file_location
-
-        # Delete the previous photo if it exists
         if previous_photo_path and os.path.exists(previous_photo_path):
             os.remove(previous_photo_path)
     else:
-        # If no new photo is uploaded, keep the old photo path
         file_location = previous_photo_path
 
     user_profile = UserProfileUpdate(first_name=first_name,
