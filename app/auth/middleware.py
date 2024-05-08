@@ -35,45 +35,49 @@ async def handle_token_refresh(refresh_token, call_next, request):
 
 
 async def check_access_token(request: Request, call_next):
-    if request.url.path in ignore_path or any(request.url.path.startswith(path) for path in ignore_start):
-        return await call_next(request)
 
-    access_token = request.cookies.get("access_token")
-    refresh_token = request.cookies.get("refresh_token")
+    if request.url.path.startswith('/protected'):
 
-    if access_token:
-        try:
-            payload = verify_token(access_token, "access_token")
-        except HTTPException as e:
-            if e.status_code == status.HTTP_401_UNAUTHORIZED:
-                # Handle access token expiration
-                return await handle_token_refresh(refresh_token, call_next, request)
-    elif refresh_token:
-        # Handle the case where the access token is not present but the refresh token is
-        return await handle_token_refresh(refresh_token, call_next, request)
+        access_token = request.cookies.get("access_token")
+        refresh_token = request.cookies.get("refresh_token")
+
+        if access_token:
+            try:
+                payload = verify_token(access_token, "access_token")
+            except HTTPException as e:
+                if e.status_code == status.HTTP_401_UNAUTHORIZED:
+                    # Handle access token expiration
+                    return await handle_token_refresh(refresh_token, call_next, request)
+        elif refresh_token:
+            # Handle the case where the access token is not present but the refresh token is
+            return await handle_token_refresh(refresh_token, call_next, request)
+        else:
+            # Neither token is present, redirect to login
+            return RedirectResponse(url="/login")
+
+        # If the access token is valid, proceed with the request
+        response = await call_next(request)
+        # Ensure the cookies are set on the response
+        response.set_cookie(
+            "access_token",
+            value=f"{access_token}",
+            httponly=True,
+            secure=True,  # Set secure=True if your site is HTTPS enabled
+            samesite='strict',
+            max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        )
+        response.set_cookie(
+            "refresh_token",
+            value=f"{refresh_token}",
+            httponly=True,
+            secure=True,  # Set secure=True if your site is HTTPS enabled
+            samesite='strict',
+            max_age=REFRESH_TOKEN_EXPIRE_MINUTES * 60
+        )
+
     else:
-        # Neither token is present, redirect to login
-        return RedirectResponse(url="/login")
+        response = await call_next(request)
 
-    # If the access token is valid, proceed with the request
-    response = await call_next(request)
-    # Ensure the cookies are set on the response
-    response.set_cookie(
-        "access_token",
-        value=f"{access_token}",
-        httponly=True,
-        secure=True,  # Set secure=True if your site is HTTPS enabled
-        samesite='strict',
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
-    )
-    response.set_cookie(
-        "refresh_token",
-        value=f"{refresh_token}",
-        httponly=True,
-        secure=True,  # Set secure=True if your site is HTTPS enabled
-        samesite='strict',
-        max_age=REFRESH_TOKEN_EXPIRE_MINUTES * 60
-    )
     return response
 
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from starlette.middleware.sessions import SessionMiddleware
 from contextlib import asynccontextmanager
 
 from subprocess import call
@@ -14,6 +15,7 @@ from app.routers.register import router as register_router
 from app.routers.login import router as login_router
 from app.routers.profile import router as profile_router
 from app.auth.middleware import check_access_token
+from app.config import SECRET_KEY
 
 
 def run_migration_at_start():
@@ -34,6 +36,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 app.middleware("http")(check_access_token)
 
 templates = Jinja2Templates(directory="templates")

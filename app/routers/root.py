@@ -17,11 +17,15 @@ templates = Jinja2Templates(directory="templates")
 async def root(request: Request,
                user: TokenData | None = Depends(check_user)):
 
-    top_message = {
-        "class": "alert alert-light rounded",
-        "icon": HI_ICON,
-        "text": "welcome to our website"
-    }
+    top_message = request.session.get('top_message')
+    if top_message is None:
+        top_message = {
+            "class": "alert alert-light rounded",
+            "icon": HI_ICON,
+            "text": "welcome to our website"
+        }
+    else:
+        request.session.pop('top_message', None)
 
     return templates.TemplateResponse("root.html",
                                       {"request": request,

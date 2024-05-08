@@ -3,7 +3,7 @@
 {% block head %} {{ super() }} {% endblock %}
 
 {% block form_content %}
-  <form action="/profile/{{ profile.user_id }}/update" method="post">
+  <form action="/protected/profile/{{ profile.user_id }}/update" method="post">
     <legend>Your profile</legend>
 
     <div class="row">
@@ -23,7 +23,8 @@
           type="text"
           id="first_name"
           name="first_name"
-          value="{{ profile.first_name if profile.first_name is not none else 'Enter your first name' }}"
+          value="{{ profile.first_name if profile.first_name is not none }}"
+          placeholder="Enter your first name"
         />
       </div>
       <div class="col">
@@ -33,7 +34,8 @@
           type="text"
           id="last_name"
           name="last_name"
-          value="{{ profile.last_name if profile.last_name is not none else 'Enter your last name' }}"
+          value="{{ profile.last_name if profile.last_name is not none }}"
+          placeholder="Enter your last name"
         />
       </div>
     </div>
@@ -45,7 +47,8 @@
         type="tel"
         id="phone_number"
         name="phone_number"
-        value="{{ profile.phone_number if profile.phone_number is not none else 'Enter your phone number' }}"
+        value="{{ profile.phone_number if profile.phone_number is not none }}"
+        placeholder="Enter your phone number"
       />
     </div>
 
@@ -61,7 +64,8 @@
         type="number"
         id="ass_size"
         name="ass_size"
-        value="{{ profile.ass_size if profile.ass_size is not none else 'Enter your ass size' }}"
+        value="{{ profile.ass_size if profile.ass_size is not none  }}"
+        placeholder="Enter your ass size"
       />
     </div>
 

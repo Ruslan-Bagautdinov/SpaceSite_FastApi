@@ -5,23 +5,23 @@ html, body {
 }
 
 body.light-theme {
-  background-color: #fff;
-  color: #000; /* This is the default text color for light theme */
+  background-color: #b9babb;
+  color: #1f1e1e; /* This is the default text color for light theme */
 }
 
 body.light-theme .custom-navbar {
-  background-color: #f8f9fa; /* This is the default light background color for navbar-light */
+  background-color: #808181; /* This is the default light background color for navbar-light */
   color: #212529; /* This is the default dark text color for navbar-light */
 }
 
 /* Define styles for the dark theme */
 body.dark-theme {
-  background-color: #121212;
+  background-color: #25282e;
   color: #fff;
 }
 
 body.dark-theme .custom-navbar {
-  background-color: #343a40; /* This is the default dark background color for navbar-dark */
+  background-color: #343a41; /* This is the default dark background color for navbar-dark */
   color: #fff; /* This is the default light text color for navbar-dark */
 }
 

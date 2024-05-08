@@ -5,6 +5,7 @@ from fastapi import (APIRouter,
                      Form)
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.sessions import SessionMiddleware
 
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +22,7 @@ from app.database.crud import (get_user,
 from templates.icons.icons import OK_ICON
 
 
-router = APIRouter(tags=['user profile'])
+router = APIRouter(tags=['user profile'], prefix='/protected')
 templates = Jinja2Templates(directory="templates")
 
 
@@ -31,7 +32,7 @@ async def get_me(db: AsyncSession = Depends(get_session),
 
     user_profile = await get_user_by_username(db, user['username'])
     user_id = user_profile.id
-    return RedirectResponse(f"/profile/{user_id}",
+    return RedirectResponse(f"/protected/profile/{user_id}",
                             status_code=status.HTTP_302_FOUND
                             )
 
@@ -75,8 +76,7 @@ async def update_profile(user_id: int,
                          phone_number: Optional[str] = Form(None),
                          photo: Optional[str] = Form(None),
                          ass_size: Optional[str] = Form(None),
-                         db: AsyncSession = Depends(get_session),
-                         user: User | None = Depends(check_user)
+                         db: AsyncSession = Depends(get_session)
                          ):
 
     user_id = user_id
@@ -88,15 +88,12 @@ async def update_profile(user_id: int,
 
     await update_user_profile(db, user_id, user_profile)
 
-    top_message = {
+    new_top_message = {
         "class": "alert alert-success rounded",
         "icon": OK_ICON,
         "text": "your data successfully registered"
     }
 
-    return templates.TemplateResponse("root.html",
-                                      {"request": request,
-                                       "top_message": top_message,
-                                       "user": user
-                                       }
-                                      )
+    request.session['top_message'] = new_top_message
+
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
