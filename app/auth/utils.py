@@ -36,14 +36,12 @@ def create_token(user_name: str, token_type: str, expire_delta: int):
     data = {
         "user_name": user_name,
         "exp": expire,
-        "Expires": expire.strftime("%a, %d %b %Y %H:%M:%S GMT"),  # Convert to GMT string
-        "Max-Age": expire_delta * 60,  # Convert to seconds
+        "Expires": expire.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+        "Max-Age": expire_delta * 60,
         "type": token_type
     }
 
-    # Encode the data to JWT
     encoded_jwt = encode(data, SECRET_KEY, algorithm=ALGORITHM)
-    # Encode the JWT to Base64
     encoded_token = b64encode(encoded_jwt).decode('utf-8')
     return encoded_token
 
@@ -72,8 +70,6 @@ def verify_token(token: str, token_type: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
     except InvalidTokenError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-
-
 
 
 def refresh_access_token(refresh_token: str):
@@ -115,15 +111,3 @@ def authenticated_root_redirect(username: str):
         max_age=REFRESH_TOKEN_EXPIRE_MINUTES * 60
     )
     return response
-
-
-# access_cookie = "Bearer Bearer Bearer ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SjFjMlZ5WDI1aGJXVWlPaUpzYjJnaUxDSmxlSEFpT2pFM01UVXhNVE0xTkRBc0lrVjRjR2x5WlhNaU9pSlVkV1VzSURBM0lFMWhlU0F5TURJMElESXdPakkxT2pRd0lFZE5WQ0lzSWsxaGVDMUJaMlVpT2pZd0xDSjBlWEJsSWpvaVlXTmpaWE56WDNSdmEyVnVJbjAuQnEzNnd0cTA0Nk9nUWhxV3lNSE55QXFpTmRhaTlfUEVzWWJGcmpzcEw3VQ=="
-#
-# refresh_cookie = "Bearer Bearer Bearer Bearer Bearer Bearer Bearer ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SjFjMlZ5WDI1aGJXVWlPaUpzYjJnaUxDSmxlSEFpT2pFM01UVTNNVFkxTWpBc0lrVjRjR2x5WlhNaU9pSlVkV1VzSURFMElFMWhlU0F5TURJMElERTVPalUxT2pJd0lFZE5WQ0lzSWsxaGVDMUJaMlVpT2pZd05EZ3dNQ3dpZEhsd1pTSTZJbkpsWm5KbGMyaGZkRzlyWlc0aWZRLlhkVXR0dVNhYVpkYjE2cW00bFdlU2JYRTd5TFJzUVJMTm84d1dIWkI4SGc="
-#
-# print(f'access_cookie = {decode_token(access_cookie)}')
-#
-# print(f'refresh_cookie = {decode_token(refresh_cookie)}')
-
-
-

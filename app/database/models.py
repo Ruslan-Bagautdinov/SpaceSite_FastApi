@@ -12,7 +12,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(index=True)
 
-    profile: Mapped["UserProfile"] = relationship(back_populates="user")
+    profile: Mapped["UserProfile"] = relationship(back_populates="user", uselist=False, cascade="all, delete-orphan")
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"

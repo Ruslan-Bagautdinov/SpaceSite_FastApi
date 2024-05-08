@@ -70,8 +70,15 @@
     </div>
 
     <div class="mb-3">
-      <input type="submit" class="btn btn-dark" value="Save" />
+      <input type="submit" class="btn btn-secondary" value="Save changes" />
+      <a href="/" class="btn btn-secondary" role="button">Cancel</a>
     </div>
+
+    <div class="border border-danger rounded">
+      <label for="delete-button" class="form-label">Warning: A deleted account cannot be restored</label>
+      <a href="/protected/profile/{{ profile.user_id }}/delete" class="btn btn-danger" role="button" id="delete-button">Delete Account</a>
+    </div>
+
   </form>
 {% endblock %}
 

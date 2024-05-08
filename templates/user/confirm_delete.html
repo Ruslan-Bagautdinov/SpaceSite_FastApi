@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %} Account delete confirmation {% endblock %}
+{% block head %} {{ super() }} {% endblock %}
+
+{% block form_content %}
+  <form id="delete-form" action="/protected/profile/{{ user_id }}/delete" method="post">
+        <label for="password">{{ user.username }}, enter your password to delete your account</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="delete-button" class="form-label">Warning: A deleted account cannot be restored</label>
+        <button type="submit" class="btn btn-danger" id="delete-button">Delete Account</button>
+        <a href="/protected/me" class="btn btn-secondary" role="button">Cancel</a>
+    </form>
+{% endblock %}
+
+{% block page_content %}
+{% endblock %}
+
+{% block scripts %} {{ super() }} {% endblock %}Предупреждение: удаленный аккаунт не может быть восстановлен

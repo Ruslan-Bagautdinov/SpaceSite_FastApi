@@ -16,18 +16,21 @@ ignore_start = ["/docs", "/openapi.json"]
 async def handle_token_refresh(refresh_token, call_next, request):
     try:
         new_access_token = refresh_access_token(refresh_token)
-        # Create a new response object to avoid modifying the original response
         response = await call_next(request)
-        # Set the new access token cookie on the response
-        response.set_cookie(key="access_token", value=f"Bearer {new_access_token}", httponly=True, max_age=1800)  # 30 minutes
-        # Set the refresh token cookie on the response if it exists
+
+        response.set_cookie(key="access_token",
+                            value=f"Bearer {new_access_token}",
+                            httponly=True, max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60)
         if refresh_token:
-            response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)  # No max_age, so it's a session cookie
+
+            response.set_cookie(key="refresh_token",
+                                value=refresh_token,
+                                httponly=True,
+                                max_age=REFRESH_TOKEN_EXPIRE_MINUTES * 60)
         return response
+
     except HTTPException as e:
         if e.status_code == status.HTTP_401_UNAUTHORIZED:
-            # Handle refresh token expiration or invalidity
-            # Clear the cookies on the response
             response = RedirectResponse(url="/login")
             response.delete_cookie(key="access_token")
             response.delete_cookie(key="refresh_token")
@@ -46,18 +49,13 @@ async def check_access_token(request: Request, call_next):
                 payload = verify_token(access_token, "access_token")
             except HTTPException as e:
                 if e.status_code == status.HTTP_401_UNAUTHORIZED:
-                    # Handle access token expiration
                     return await handle_token_refresh(refresh_token, call_next, request)
         elif refresh_token:
-            # Handle the case where the access token is not present but the refresh token is
             return await handle_token_refresh(refresh_token, call_next, request)
         else:
-            # Neither token is present, redirect to login
             return RedirectResponse(url="/login")
 
-        # If the access token is valid, proceed with the request
         response = await call_next(request)
-        # Ensure the cookies are set on the response
         response.set_cookie(
             "access_token",
             value=f"{access_token}",
@@ -95,3 +93,57 @@ async def check_user(request: Request):
         return None
 
 
+async def clear_tokens_in_cookies(response: RedirectResponse):
+
+    response.set_cookie(
+        "access_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+    return response
+
+
+async def set_tokens_in_cookies(response: RedirectResponse):
+
+    response.set_cookie(
+        "access_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+    return response

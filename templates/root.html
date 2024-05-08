@@ -6,8 +6,8 @@
     <div class="{{ top_message.class }}" role="alert">
         {{ top_message.icon | safe  }}
         {% if user %}
-        {{ user.username }}, {{ top_message.text }}  !!!
-        {% else %} Unregistered user, {{ top_message.text }}!!!
+        {{ user.username }}{{ top_message.text }}  !!!
+        {% else %}User{{ top_message.text }}!!!
         {% endif %}
     </div>
 

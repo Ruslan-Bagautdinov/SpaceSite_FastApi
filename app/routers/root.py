@@ -22,7 +22,7 @@ async def root(request: Request,
         top_message = {
             "class": "alert alert-light rounded",
             "icon": HI_ICON,
-            "text": "welcome to our website"
+            "text": ", welcome to our website!"
         }
     else:
         request.session.pop('top_message', None)
