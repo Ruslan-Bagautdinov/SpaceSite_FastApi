@@ -86,7 +86,61 @@ def refresh_access_token(refresh_token: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
 
 
-def authenticated_root_redirect(username: str):
+async def set_tokens_in_cookies(response: RedirectResponse,
+                                access_token: str | None = None,
+                                refresh_token: str | None = None):
+
+    if access_token:
+        response.set_cookie(
+            "access_token",
+            value=f"{access_token}",
+            httponly=True,
+            secure=True,  # Set secure=True if your site is HTTPS enabled
+            samesite='strict',
+            max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        )
+
+    if refresh_token:
+        response.set_cookie(
+            "refresh_token",
+            value=f"{refresh_token}",
+            httponly=True,
+            secure=True,  # Set secure=True if your site is HTTPS enabled
+            samesite='strict',
+            max_age=REFRESH_TOKEN_EXPIRE_MINUTES * 60
+        )
+    return response
+
+
+async def clear_tokens_in_cookies(response: RedirectResponse):
+
+    response.set_cookie(
+        "access_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        value="",
+        httponly=True,
+        max_age=0,
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        path="/",
+        domain=None,
+        secure=False,
+        samesite="lax"
+    )
+    return response
+
+
+async def authenticated_root_redirect(username: str):
 
     access_token = create_access_token(username)
     refresh_token = create_refresh_token(username)
@@ -94,20 +148,6 @@ def authenticated_root_redirect(username: str):
     response = RedirectResponse(url="/",
                                 status_code=status.HTTP_302_FOUND
                                 )
-    response.set_cookie(
-        "access_token",
-        value=f"Bearer {access_token}",
-        httponly=True,
-        secure=True,  # Set secure=True if your site is HTTPS enabled
-        samesite='strict',
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
-    )
-    response.set_cookie(
-        "refresh_token",
-        value=f"Bearer {refresh_token}",
-        httponly=True,
-        secure=True,  # Set secure=True if your site is HTTPS enabled
-        samesite='strict',
-        max_age=REFRESH_TOKEN_EXPIRE_MINUTES * 60
-    )
+    response = await set_tokens_in_cookies(response, access_token, refresh_token)
+
     return response

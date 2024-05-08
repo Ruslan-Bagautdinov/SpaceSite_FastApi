@@ -2,19 +2,17 @@ from fastapi import (APIRouter,
                      Depends,
                      status,
                      Request,
-                     Response,
                      Form,
                      HTTPException)
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-from starlette.middleware.sessions import SessionMiddleware
 
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-from app.auth.schemas import TokenData, User, UserProfileUpdate
-from app.auth.middleware import check_user, delete_tokens
+from app.auth.schemas import TokenData, UserProfileUpdate
+from app.auth.middleware import check_user
 from app.database.postgre_db import get_session
 from app.database.crud import (get_user,
                                get_user_profile,

@@ -3,14 +3,22 @@
 {% block head %} {{ super() }} {% endblock %}
 
 {% block form_content %}
-  <form id="delete-form" action="/protected/profile/{{ user_id }}/delete" method="post">
-        <label for="password">{{ user.username }}, enter your password to delete your account</label>
-        <input type="password" id="password" name="password" required>
+    <div class="container" style="margin: 5px">
+        <form id="delete-form" action="/protected/profile/{{ user_id }}/delete" method="post">
+            <div class="container" style="margin: 5px">
+                <label for="password">{{ user.username }}, enter your password to delete your account</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="border border-danger rounded" >
+                <div class="container" style="margin: 5px">
+                    <label for="delete-button" class="form-label">Warning: A deleted account cannot be restored</label>
+                    <button type="submit" class="btn btn-danger btn-sm" id="delete-button">Delete Account</button>
+                    <a href="/protected/me" class="btn btn-secondary btn-sm" role="button">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
 
-        <label for="delete-button" class="form-label">Warning: A deleted account cannot be restored</label>
-        <button type="submit" class="btn btn-danger" id="delete-button">Delete Account</button>
-        <a href="/protected/me" class="btn btn-secondary" role="button">Cancel</a>
-    </form>
 {% endblock %}
 
 {% block page_content %}
