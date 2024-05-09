@@ -86,7 +86,7 @@ def refresh_access_token(refresh_token: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
 
 
-async def set_tokens_in_cookies(response: RedirectResponse,
+def set_tokens_in_cookies(response: RedirectResponse,
                                 access_token: str | None = None,
                                 refresh_token: str | None = None):
 
@@ -112,7 +112,7 @@ async def set_tokens_in_cookies(response: RedirectResponse,
     return response
 
 
-async def clear_tokens_in_cookies(response: RedirectResponse):
+def clear_tokens_in_cookies(response: RedirectResponse):
 
     response.set_cookie(
         "access_token",
@@ -148,6 +148,6 @@ async def authenticated_root_redirect(username: str):
     response = RedirectResponse(url="/",
                                 status_code=status.HTTP_302_FOUND
                                 )
-    response = await set_tokens_in_cookies(response, access_token, refresh_token)
+    response = set_tokens_in_cookies(response, access_token, refresh_token)
 
     return response

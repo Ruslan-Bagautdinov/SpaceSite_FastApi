@@ -17,20 +17,11 @@ async def handle_token_refresh(refresh_token, call_next, request):
     try:
         new_access_token = refresh_access_token(refresh_token)
         response = await call_next(request)
-
-        response = await set_tokens_in_cookies(response, access_token=new_access_token)
-        # response.set_cookie(key="access_token",
-        #                     value=f"Bearer {new_access_token}",
-        #                     httponly=True, max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+        response = set_tokens_in_cookies(response, access_token=new_access_token)
 
         if refresh_token:
+            response = set_tokens_in_cookies(response, refresh_token=refresh_token)
 
-            response = await set_tokens_in_cookies(response, refresh_token=refresh_token)
-
-            # response.set_cookie(key="refresh_token",
-            #                     value=refresh_token,
-            #                     httponly=True,
-            #                     max_age=REFRESH_TOKEN_EXPIRE_MINUTES * 60)
         return response
 
     except HTTPException as e:
@@ -61,7 +52,7 @@ async def check_access_token(request: Request, call_next):
 
         response = await call_next(request)
 
-        response = await set_tokens_in_cookies(response, access_token, refresh_token)
+        response = set_tokens_in_cookies(response, access_token, refresh_token)
 
     else:
         response = await call_next(request)

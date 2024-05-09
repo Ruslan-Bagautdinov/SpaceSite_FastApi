@@ -49,6 +49,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 async def logout_user():
 
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
-    response = await clear_tokens_in_cookies(response)
+    response = clear_tokens_in_cookies(response)
 
     return response

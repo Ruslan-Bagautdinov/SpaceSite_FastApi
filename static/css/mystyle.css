@@ -57,3 +57,8 @@ body.light-theme .custom-navbar .navbar-toggler-icon {
     padding-bottom: 5px;
     padding-top: 5px;
 }
+
+.small-image {
+    width: auto;
+    height: 300px;
+}

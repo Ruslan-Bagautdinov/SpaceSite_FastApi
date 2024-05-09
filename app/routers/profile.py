@@ -24,7 +24,7 @@ from app.database.crud import (get_user,
                                update_user_profile,
                                delete_user)
 from app.config import IMAGE_DIR
-from app.tools.async_upload import save_upload_file
+from app.tools.tools import save_upload_file, read_and_encode_photo
 
 from templates.icons.icons import OK_ICON, USER_DELETE_ICON
 
@@ -71,15 +71,18 @@ async def get_profile(request: Request,
 
     profile.update(profile_addon)
 
-    if result_profile.photo:
-        try:
-            with open(result_profile.photo, 'rb') as photo_file:
-                photo_data = photo_file.read()
-                photo_base64 = base64.b64encode(photo_data).decode('utf-8')
-                profile['photo'] = photo_base64
-        except FileNotFoundError:
-            # Handle the case where the photo file is not found
-            profile['photo'] = None
+    default_avatar_path = "static/img/default_avatar.jpg"
+    if result_profile.photo and os.path.exists(result_profile.photo):
+        photo_base64 = await read_and_encode_photo(result_profile.photo)
+        if photo_base64:
+            profile['photo'] = photo_base64
+        else:
+            default_avatar_base64 = await read_and_encode_photo(default_avatar_path)
+            profile['photo'] = default_avatar_base64
+    else:
+        # If the user does not have a photo or the path is invalid, serve the default avatar
+        default_avatar_base64 = await read_and_encode_photo(default_avatar_path)
+        profile['photo'] = default_avatar_base64
 
     return templates.TemplateResponse("user/profile.html",
                                       {"request": request,
