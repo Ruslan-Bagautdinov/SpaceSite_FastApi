@@ -14,5 +14,7 @@ PG_DB_USER = getenv('PG_DB_USER')
 PG_DB_PASSWORD = getenv('PG_DB_PASSWORD')
 PG_DB_NAME = getenv('PG_DB_NAME')
 
+UNSPLASH_ACCESS_KEY = getenv('UNSPLASH_ACCESS_KEY')
+
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 IMAGE_DIR = path.join(BASE_DIR, 'photo')

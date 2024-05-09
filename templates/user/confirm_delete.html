@@ -2,7 +2,7 @@
 {% block title %} Account delete confirmation {% endblock %}
 {% block head %} {{ super() }} {% endblock %}
 
-{% block form_content %}
+{% block page_content %}
     <div class="container" style="margin: 5px">
         <form id="delete-form" action="/protected/profile/{{ user_id }}/delete" method="post">
             <div class="container" style="margin: 5px">
@@ -19,9 +19,6 @@
         </form>
     </div>
 
-{% endblock %}
-
-{% block page_content %}
 {% endblock %}
 
 {% block scripts %} {{ super() }} {% endblock %}Предупреждение: удаленный аккаунт не может быть восстановлен

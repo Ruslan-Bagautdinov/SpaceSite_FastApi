@@ -2,15 +2,15 @@
 {% block title %} Profile page {% endblock %}
 {% block head %} {{ super() }} {% endblock %}
 
-{% block form_content %}
+{% block page_content %}
   <form action="/protected/profile/{{ profile.user_id }}/update" method="post" enctype="multipart/form-data">
     <legend>Your profile</legend>
 
     <div class="row">
-      <div class="col">
-        <img src="data:image/png;base64,{{ profile.photo }}" class="small-image" alt="User Photo" >
+      <div class="col-4 col-sm-3">
+        <img src="data:image/png;base64,{{ profile.photo }}" class="image-fluid" alt="User Photo" >
       </div>
-      <div class="col">
+      <div class="col-8 col-sm-9">
         <legend>Username: {{ profile.username }}</legend>
         <legend>Email: {{ profile.email }}</legend>
       </div>
@@ -88,6 +88,4 @@
   </form>
 {% endblock %}
 
-{% block page_content %}
-{% endblock %}
 {% block scripts %} {{ super() }} {% endblock %}

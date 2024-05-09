@@ -2,7 +2,7 @@
 {% block title %} Register page {% endblock %}
 {% block head %} {{ super() }} {% endblock %}
 
-{% block form_content %}
+{% block page_content %}
   <form action="/register" method="post">
     <legend>Registration Form</legend>
     <label for="username" class="form-label">Username:</label><br />
@@ -20,6 +20,4 @@
   </form>
 {% endblock %}
 
-{% block page_content %}
-{% endblock %}
 {% block scripts %} {{ super() }} {% endblock %}

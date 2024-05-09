@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 {% block title %} Root {% endblock %}
 {% block head %} {{ super() }} {% endblock %}
-{% block page_content %}
 
-    <div class="{{ top_message.class }}" role="alert">
-        {{ top_message.icon | safe  }}
-        {% if user %}
-        {{ user.username }}{{ top_message.text }}  !!!
-        {% else %}User{{ top_message.text }}!!!
-        {% endif %}
-    </div>
-
-    {% block form_content %}
-    {% endblock %}
-
+{% block top_message %}
+<div class="{{ top_message.class }}" role="alert">
+    {{ top_message.icon | safe }}
+    {% if user %}
+        {{ user.username | safe }}{{ top_message.text | safe }}  !!!
+    {% else %}
+        User{{ top_message.text | safe }}!!!
+    {% endif %}
+</div>
 {% endblock %}
+
+{% block unsplash_content %}
+    <img src="{{ unsplash_photo }}" alt="Cosmos Image" class="img-fluid" id="unsplash-main">
+{% endblock %}
+
 {% block scripts %} {{ super() }} {% endblock %}

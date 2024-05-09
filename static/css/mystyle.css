@@ -1,8 +1,13 @@
 html, body {
     height: 100%;
-    margin: 0;
-    padding: 0;
+    width: 100%;
+    margin: 0; /* Optional: Remove default margin */
+    overflow: auto;
 }
+
+/*#wrapper {*/
+/*    min-height: 100%;*/
+/*}*/
 
 body.light-theme {
   /*background-color: #b9babb;*/
@@ -49,16 +54,26 @@ body.light-theme .custom-navbar .navbar-toggler-icon {
   font-weight: bold;
 }
 
-.page_content {
-    height: 100%;
+/*.page_main_box {*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*    margin-bottom: 0;*/
+/*    margin-top: 0;*/
+/*    padding-bottom: 5px;*/
+/*    padding-top: 5px;*/
+/*}*/
+
+/*.small-image {*/
+/*    width: auto;*/
+/*    height: 200px;*/
+/*}*/
+
+.image-fluid {
     width: 100%;
-    margin-bottom: 0;
-    margin-top: 0;
-    padding-bottom: 5px;
-    padding-top: 5px;
+    height: auto;
 }
 
-.small-image {
-    width: auto;
-    height: 300px;
+#unsplash-main {
+    max-width: 95%;
+    height: auto;
 }

@@ -40,7 +40,7 @@ app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 app.middleware("http")(check_access_token)
 
 templates = Jinja2Templates(directory="templates")
-app.mount("/_static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 app.include_router(root_router)
