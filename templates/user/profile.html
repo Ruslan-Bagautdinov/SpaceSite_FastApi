@@ -4,18 +4,18 @@
 
 {% block page_content %}
   <form action="/protected/profile/{{ profile.user_id }}/update" method="post" enctype="multipart/form-data">
-    <legend>Your profile</legend>
+    <h2>Your profile</h2>
 
     <div class="row">
+
       <div class="col-4 col-sm-3">
-        <img src="data:image/png;base64,{{ profile.photo }}" class="image-fluid" alt="User Photo" >
+            <img id="avatar" src="data:image/png;base64,{{ profile.photo }}" class="img-fluid" alt="User Photo">
       </div>
+
       <div class="col-8 col-sm-9">
-        <legend>Username: {{ profile.username }}</legend>
-        <legend>Email: {{ profile.email }}</legend>
+        <h3>Username: {{ profile.username }}</h3>
+        <h3>Email: {{ profile.email }}</h3>
       </div>
-
-
 
     </div>
 
@@ -88,4 +88,30 @@
   </form>
 {% endblock %}
 
-{% block scripts %} {{ super() }} {% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <script>
+    // Function to preview the avatar before uploading
+      function previewAvatar(event) {
+          // Check if the event target is the avatar image
+          if (event.target.files && event.target.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                  var output = document.getElementById('avatar');
+                  output.src = e.target.result;
+              }
+              reader.readAsDataURL(event.target.files[0]);
+          }
+      }
+
+      // Add event listener to the file input
+      document.getElementById('photo').addEventListener('change', previewAvatar);
+
+      // Update the file name display when a file is selected
+      document.getElementById('photo').addEventListener('change', function(event) {
+          var output = document.getElementById('fileNameDisplay');
+          output.textContent = event.target.files[0].name;
+      });
+  </script>
+
+{% endblock %}
