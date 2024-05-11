@@ -1,14 +1,27 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/*.container-fluid {*/
+/*  flex-grow: 1;*/
+/*}*/
 
 body.light-theme {
-  /*background-color: #b9babb;*/
+    /*background-color: #b9babb;*/
     background: rgb(248,249,250);
-background: linear-gradient(180deg, rgba(248,249,250,1) 0%, rgba(248,249,250,1) 45%, rgba(148,152,156,1) 100%);
+    background: linear-gradient(180deg, rgba(248,249,250,1) 0%, rgba(248,249,250,1) 45%, rgba(148,152,156,1) 100%);
     color: #222222; /* This is the default text color for light theme */
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 body.light-theme .custom-navbar {
-  background-color: #808181; /* This is the default light background color for navbar-light */
-  color: #222222; /* This is the default dark text color for navbar-light */
+    background-color: #808181; /* This is the default light background color for navbar-light */
+    color: #222222; /* This is the default dark text color for navbar-light */
 }
 
 /* Define styles for the dark theme */
@@ -17,6 +30,10 @@ body.dark-theme {
     background: rgb(33,37,41);
 background: linear-gradient(180deg, rgba(33,37,41,1) 0%, rgba(33,37,41,1) 45%, rgba(99,107,115,1) 100%);
     color: #eeeeee;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 body.dark-theme .custom-navbar {

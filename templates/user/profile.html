@@ -6,7 +6,7 @@
   <form action="/protected/profile/{{ profile.user_id }}/update" method="post" enctype="multipart/form-data">
     <h2>Your profile</h2>
 
-    <div class="row">
+    <div class="row text-start">
 
       <div class="col-4 col-sm-3">
             <label for="photo">
@@ -81,10 +81,18 @@
     </div>
 
     <div class="border border-danger rounded">
-        <div class="container" style="margin: 5px">
-          <label for="delete-button" class="form-label">Warning: A deleted account cannot be restored</label>
-          <a href="/protected/profile/{{ profile.user_id }}/delete" class="btn btn-danger btn-sm" role="button" id="delete-button">Delete Account</a>
-        </div>
+      <div class="container-fluid" style="margin: 5px">
+            <div class="row">
+              <div class="col text-center">
+                <label for="delete-button" class="form-label">Warning: A deleted account cannot be restored</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col text-center">
+                <a href="/protected/profile/{{ profile.user_id }}/delete" class="btn btn-danger btn-sm" role="button" id="delete-button">Delete Account</a>
+              </div>
+            </div>
+      </div>
     </div>
 
   </form>
