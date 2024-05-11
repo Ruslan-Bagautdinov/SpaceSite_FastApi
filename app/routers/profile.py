@@ -12,7 +12,6 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 import os
-import base64
 
 
 from app.auth.schemas import TokenData, UserProfileUpdate
@@ -80,7 +79,6 @@ async def get_profile(request: Request,
             default_avatar_base64 = await read_and_encode_photo(default_avatar_path)
             profile['photo'] = default_avatar_base64
     else:
-        # If the user does not have a photo or the path is invalid, serve the default avatar
         default_avatar_base64 = await read_and_encode_photo(default_avatar_path)
         profile['photo'] = default_avatar_base64
 

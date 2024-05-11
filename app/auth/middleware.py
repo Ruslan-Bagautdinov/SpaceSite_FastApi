@@ -35,7 +35,6 @@ async def handle_token_refresh(refresh_token, call_next, request):
 async def check_access_token(request: Request, call_next):
 
     if request.url.path.startswith('/protected'):
-
         access_token = request.cookies.get("access_token")
         refresh_token = request.cookies.get("refresh_token")
 
@@ -49,11 +48,8 @@ async def check_access_token(request: Request, call_next):
             return await handle_token_refresh(refresh_token, call_next, request)
         else:
             return RedirectResponse(url="/login")
-
         response = await call_next(request)
-
         response = set_tokens_in_cookies(response, access_token, refresh_token)
-
     else:
         response = await call_next(request)
 

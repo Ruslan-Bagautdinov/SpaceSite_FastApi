@@ -42,17 +42,12 @@ async def register_user(request: Request,
     if db_user:
         raise HTTPException(status_code=400,
                             detail="Username already registered")
-
     user = UserCreate(username=username, email=email, password=password)
-
     await create_user(db=db, user=user)
-
     new_top_message = {
         "class": "alert alert-info rounded",
         "icon": USER_REGISTER_ICON,
         "text": f" account created successfully!"
     }
-
     request.session['top_message'] = new_top_message
-
     return await authenticated_root_redirect(user.username)

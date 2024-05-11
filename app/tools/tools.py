@@ -36,20 +36,16 @@ async def load_unsplash_photo(query: str = "cosmos") -> str | None:
     params = {
         "query": query,
         "orientation": "landscape",
-        "per_page": 30  # Fetch up to 30 photos per search
+        "per_page": 50
     }
 
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get(url, headers=headers, params=params)
-            response.raise_for_status()  # Raise an HTTPError if the HTTP request returned an unsuccessful status code
+            response.raise_for_status()
             data = response.json()
-
-            # Check if there are any results
             if data.get('results'):
-                # Get a random index within the range of the results list length
                 random_index = random.randint(0, len(data['results']) - 1)
-                # Get the URL of a random result
                 image_url = data['results'][random_index]['urls']['regular']
             else:
                 image_url = None
