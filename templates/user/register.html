@@ -4,7 +4,8 @@
 
 {% block page_content %}
   <form action="/register" method="post">
-    <legend>Registration Form</legend>
+    <fieldset>
+        <legend>Registration Form</legend>
     <label for="username" class="form-label">Username:</label><br />
     <input type="text" class="form-control" id="username" name="username" /><br />
     <label for="email" class="form-label">Email:</label><br />
@@ -17,6 +18,8 @@
       name="password"
     /><br />
     <input type="submit" class="btn btn-success" value="Register" />
+    </fieldset>
+
   </form>
 {% endblock %}
 

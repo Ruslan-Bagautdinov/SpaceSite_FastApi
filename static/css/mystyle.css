@@ -65,12 +65,13 @@ body.light-theme .custom-navbar .navbar-toggler-icon {
 
 .image-container {
     position: relative;
-    width: 95vw;
+    width: 98vw;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .image-container img {
+    border-radius: 10px;
     width: 100%;
     height: auto;
 }
