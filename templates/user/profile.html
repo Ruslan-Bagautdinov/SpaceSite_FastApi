@@ -9,7 +9,9 @@
     <div class="row">
 
       <div class="col-4 col-sm-3">
-            <img id="avatar" src="data:image/png;base64,{{ profile.photo }}" class="img-fluid" alt="User Photo">
+            <label for="photo">
+              <img id="avatar" src="data:image/png;base64,{{ profile.photo }}" class="img-fluid" alt="User Photo" style="cursor: pointer;">
+            </label>
       </div>
 
       <div class="col-8 col-sm-9">
@@ -91,27 +93,42 @@
 {% block scripts %}
   {{ super() }}
   <script>
-    // Function to preview the avatar before uploading
-      function previewAvatar(event) {
-          // Check if the event target is the avatar image
-          if (event.target.files && event.target.files[0]) {
-              var reader = new FileReader();
-              reader.onload = function(e) {
-                  var output = document.getElementById('avatar');
-                  output.src = e.target.result;
-              }
-              reader.readAsDataURL(event.target.files[0]);
-          }
-      }
+function previewAvatar(event) {
+    // Check if the event target is the avatar image
+    if (event.target.files && event.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var output = document.getElementById('avatar');
+            output.src = e.target.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+}
 
-      // Add event listener to the file input
-      document.getElementById('photo').addEventListener('change', previewAvatar);
+// Add an event listener to the file input to preview the avatar
+document.getElementById('photo').addEventListener('change', previewAvatar);
 
-      // Update the file name display when a file is selected
-      document.getElementById('photo').addEventListener('change', function(event) {
-          var output = document.getElementById('fileNameDisplay');
-          output.textContent = event.target.files[0].name;
-      });
+// Add an event listener to the form to handle the submit event
+document.getElementById('avatarForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+    // Here you can add your AJAX request or other logic to handle the file upload
+    // For example, you can use the FormData API to send the file to the server
+    var formData = new FormData(event.target);
+    fetch('/protected/profile/{{ profile.user_id }}/update', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Update the avatar image after the file is processed on the server
+        var output = document.getElementById('avatar');
+        output.src = URL.createObjectURL(event.target.photo.files[0]);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
   </script>
 
 {% endblock %}

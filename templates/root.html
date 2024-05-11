@@ -17,4 +17,9 @@
     <img src="{{ unsplash_photo }}" alt="Cosmos Image" class="img-fluid" id="unsplash-main">
 {% endblock %}
 
+{% block footer_content %}
+    Photo by <a href="https://unsplash.com/"
+                style="text-decoration: None; color: #ffffff">Unsplash</a>
+{% endblock %}
+
 {% block scripts %} {{ super() }} {% endblock %}
