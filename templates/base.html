@@ -20,57 +20,42 @@
     />
     {% endblock %}
   </head>
+
   <body>
+    <!-- Navbar -->
     {% include 'include/navbar.html' %}
 
-    <!-- Top Message  -->
-    <div class="container text-center p-0">
-
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="row text-center">
+            <div class="col">
+                <!-- Top message -->
+                {% block top_message %}
+                {% endblock %}
+            </div>
+        </div>
         <div class="row">
-          <div class="col-0 col-sm-1"></div>
-          <div class="col-12 col-sm-10">
-            {% block top_message %}
-            {% endblock %}
-          </div>
-          <div class="col-0 col-sm-1"></div>
+            <div class="col">
+                <!-- Page Content -->
+                {% block page_content %}
+                {% endblock %}
+            </div>
         </div>
-
-      </div>
-
-
-      <!-- Page Content  -->
-      <div class="container text-center p-0">
-
         <div class="row">
-          <div class="col-0 col-sm-1"></div>
-          <div class="col-12 col-sm-10">
-            {% block page_content %}
-            {% endblock %}
-          </div>
-          <div class="col-0 col-sm-1"></div>
+            <div class="col-12">
+                <!-- Unsplash Content -->
+                {% block unsplash_content %}
+                {% endblock %}
+            </div>
         </div>
+    </div>
 
-      </div>
-
-      <!-- Unsplash Photo  -->
-      <div class="container-fluid p-0">
-
-        <div class="row no-gutters justify-content-center">
-            {% block unsplash_content %}
-            {% endblock %}
-        </div>
-
-      </div>
-
-      <!-- Footer Content  -->
-      <div class="container-fluid text-center p-0">
-
-        <div class="row no-gutters justify-content-center">
-            {% block footer_content %}
-            {% endblock %}
-        </div>
-
-      </div>
+    <!-- Footer -->
+    <footer class="text-center">
+        <!-- Footer content -->
+        {% block footer_content %}
+        {% endblock %}
+    </footer>
 
     {% block scripts %}
     <!-- Light and Dark theme -->
@@ -120,7 +105,6 @@
         document.querySelector('.theme-toggle[data-theme="light"]').classList.add('active');
       }
     </script>
-
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

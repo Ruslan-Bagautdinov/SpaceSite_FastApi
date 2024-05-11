@@ -1,13 +1,3 @@
-html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0; /* Optional: Remove default margin */
-    overflow: auto;
-}
-
-/*#wrapper {*/
-/*    min-height: 100%;*/
-/*}*/
 
 body.light-theme {
   /*background-color: #b9babb;*/
@@ -54,26 +44,14 @@ body.light-theme .custom-navbar .navbar-toggler-icon {
   font-weight: bold;
 }
 
-/*.page_main_box {*/
-/*    height: 100%;*/
-/*    width: 100%;*/
-/*    margin-bottom: 0;*/
-/*    margin-top: 0;*/
-/*    padding-bottom: 5px;*/
-/*    padding-top: 5px;*/
-/*}*/
-
-/*.small-image {*/
-/*    width: auto;*/
-/*    height: 200px;*/
-/*}*/
-
-.image-fluid {
-    width: 100%;
-    height: auto;
+.image-container {
+    position: relative;
+    width: 95vw; /* 95% of the viewport width */
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-#unsplash-main {
-    max-width: 95%;
-    height: auto;
+.image-container img {
+    width: 100%; /* Ensures the image takes up the full width of its container */
+    height: auto; /* Maintains the aspect ratio */
 }
