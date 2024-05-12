@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.web
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     volumes:
       - .:/app
@@ -11,16 +13,22 @@ services:
       - alembic:/app/alembic
       - photo:/app/photo
     ports:
-      - 8000:8000
+      - "8000:8000"
     depends_on:
       - db
     env_file:
       - .env
+    environment:
+      - POSTGRES_HOST=db
 
   db:
-    image: postgres:13-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
     env_file:
       - .env
 

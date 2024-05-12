@@ -4,15 +4,15 @@ from sqlalchemy.ext.asyncio import (AsyncSession,
 from sqlalchemy.orm import declarative_base
 
 
-from app.config import PG_DB_USER, PG_DB_PASSWORD, PG_DB_HOST, PG_DB_NAME
+from app.config import POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_NAME
 
 DATABASE_URL = (f"postgresql+asyncpg"
-                f"://{PG_DB_USER}"
-                f":{PG_DB_PASSWORD}"
-                f"@{PG_DB_HOST}"
-                f"/{PG_DB_NAME}")
+                f"://{POSTGRES_USER}"
+                f":{POSTGRES_PASSWORD}"
+                f"@{POSTGRES_HOST}"
+                f"/{POSTGRES_NAME}")
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, echo=True)
 
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 

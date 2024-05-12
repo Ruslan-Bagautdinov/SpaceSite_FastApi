@@ -1,0 +1,5 @@
+# Use an official PostgreSQL image as a parent image
+FROM postgres:13-alpine
+
+# Run the default PostgreSQL entrypoint
+CMD ["postgres"]
