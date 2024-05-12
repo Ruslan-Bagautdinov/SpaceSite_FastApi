@@ -1,7 +1,7 @@
 from os import getenv, path
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 SECRET_KEY = getenv('SECRET_KEY')
 ALGORITHM = getenv('ALGORITHM')

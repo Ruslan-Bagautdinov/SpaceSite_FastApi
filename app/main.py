@@ -15,7 +15,7 @@ from app.routers.register import router as register_router
 from app.routers.login import router as login_router
 from app.routers.profile import router as profile_router
 from app.auth.middleware import check_access_token
-from app.config import SECRET_KEY
+from app.config import SECRET_KEY, BASE_DIR
 
 
 def run_migration_at_start():
@@ -39,8 +39,8 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 app.middleware("http")(check_access_token)
 
-templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory=f"{BASE_DIR}/templates")
+app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 
 
 app.include_router(root_router)
