@@ -41,8 +41,8 @@ def create_token(user_name: str, token_type: str, expire_delta: int):
         "type": token_type
     }
 
-    encoded_jwt = encode(data, SECRET_KEY, algorithm=ALGORITHM)
-    encoded_token = b64encode(encoded_jwt).decode('utf-8')
+    encoded_token = encode(data, SECRET_KEY, algorithm=ALGORITHM)
+    # encoded_token = b64encode(encoded_jwt).decode('utf-8')  # use with PyJWT==1.7.1
     return encoded_token
 
 
@@ -56,7 +56,7 @@ def create_refresh_token(user_name: str):
 
 def decode_token(token):
     token = token.replace("Bearer ", "")
-    token = b64decode(token).decode('utf-8')
+    # token = b64decode(token).decode('utf-8') # use with PyJWT==1.7.1
     return decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
 
