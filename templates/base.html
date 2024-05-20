@@ -31,7 +31,13 @@
             <div class="col">
                 <!-- Top message -->
                 {% block top_message %}
-                {% endblock %}
+                    {% if top_message %}
+                        <div class="{{ top_message.class }}" role="alert">
+                            {{ top_message.icon | safe }}
+                            {{ top_message.text | safe }}
+                    {% endif %}
+        </div>
+{% endblock %}
             </div>
         </div>
         <div class="row text-center">

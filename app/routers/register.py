@@ -15,7 +15,8 @@ from app.auth.utils import authenticated_root_redirect
 from app.routers.login import check_user
 from app.database.crud import (create_user,
                                get_user_by_username)
-from templates.icons.icons import USER_REGISTER_ICON
+from app.tools.functions import redirect_with_message
+from templates.icons import WARNING_ICON, WARNING_CLASS, OK_ICON, OK_CLASS, USER_DELETE_ICON, USER_REGISTER_ICON
 
 
 router = APIRouter(tags=['user register'])
@@ -26,9 +27,16 @@ templates = Jinja2Templates(directory="templates")
 async def register_user(request: Request,
                         user: TokenData | None = Depends(check_user)
                         ):
+    top_message = request.session.get('top_message')
+    if top_message:
+        request.session.pop('top_message', None)
+
     return templates.TemplateResponse("user/register.html",
                                       {"request": request,
-                                       "user": user},)
+                                       "user": user,
+                                       "top_message": top_message
+                                       }
+                                      )
 
 
 @router.post("/register", response_model=User)
@@ -40,14 +48,18 @@ async def register_user(request: Request,
                         ):
     db_user = await get_user_by_username(db, username=username)
     if db_user:
-        raise HTTPException(status_code=400,
-                            detail="Username already registered")
+        return await redirect_with_message(request=request,
+                                           message_class=WARNING_CLASS,
+                                           message_icon=WARNING_ICON,
+                                           message_text=f"Username {username} is already registered!",
+                                           endpoint="/register"
+                                           )
     user = UserCreate(username=username, email=email, password=password)
     await create_user(db=db, user=user)
     new_top_message = {
         "class": "alert alert-info rounded",
         "icon": USER_REGISTER_ICON,
-        "text": f" account created successfully!"
+        "text": f"User {username} has been created"
     }
     request.session['top_message'] = new_top_message
-    return await authenticated_root_redirect(user.username)
+    return await authenticated_root_redirect(request, user.username)

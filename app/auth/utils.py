@@ -1,4 +1,5 @@
-from fastapi import (HTTPException,
+from fastapi import (Request,
+                     HTTPException,
                      status)
 from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
@@ -13,6 +14,8 @@ from app.config import (ALGORITHM,
                         REFRESH_TOKEN_EXPIRE_MINUTES
                         )
 
+from app.tools.functions import redirect_with_message
+from templates.icons import OK_CLASS, OK_ICON
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -87,8 +90,8 @@ def refresh_access_token(refresh_token: str):
 
 
 def set_tokens_in_cookies(response: RedirectResponse,
-                                access_token: str | None = None,
-                                refresh_token: str | None = None):
+                          access_token: str | None = None,
+                          refresh_token: str | None = None):
 
     if access_token:
         response.set_cookie(
@@ -140,14 +143,16 @@ def clear_tokens_in_cookies(response: RedirectResponse):
     return response
 
 
-async def authenticated_root_redirect(username: str):
+async def authenticated_root_redirect(request: Request, username: str):
 
     access_token = create_access_token(username)
     refresh_token = create_refresh_token(username)
 
-    response = RedirectResponse(url="/",
-                                status_code=status.HTTP_302_FOUND
-                                )
+    response = await redirect_with_message(request=request,
+                                           message_class=OK_CLASS,
+                                           message_icon=OK_ICON,
+                                           message_text=f"You are logged in with the account: {username}",
+                                           endpoint="/")
     response = set_tokens_in_cookies(response, access_token, refresh_token)
 
     return response

@@ -1,17 +1,6 @@
 {% extends "base.html" %}
-{% block title %} Root {% endblock %}
+{% block title %} Home page {% endblock %}
 {% block head %} {{ super() }} {% endblock %}
-
-{% block top_message %}
-<div class="{{ top_message.class }}" role="alert">
-    {{ top_message.icon | safe }}
-    {% if user %}
-        {{ user.username | safe }}{{ top_message.text | safe }}  !!!
-    {% else %}
-        User{{ top_message.text | safe }}!!!
-    {% endif %}
-</div>
-{% endblock %}
 
 {% block unsplash_content %}
 <div class="container-fluid">

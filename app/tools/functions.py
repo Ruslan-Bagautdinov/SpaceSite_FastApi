@@ -1,4 +1,8 @@
-from fastapi import UploadFile
+from fastapi import (UploadFile,
+                     Request,
+                     status
+                     )
+from fastapi.responses import HTMLResponse, RedirectResponse
 import aiofiles
 import base64
 import httpx
@@ -57,3 +61,22 @@ async def load_unsplash_photo(query: str = "cosmos") -> str | None:
             image_url = None
 
     return image_url
+
+
+async def redirect_with_message(request: Request,
+                                message_class: str,
+                                message_icon: str,
+                                message_text: str,
+                                endpoint: str = None,
+                                logout: bool = False):
+    top_message = {
+        "class": message_class,
+        "icon": message_icon,
+        "text": message_text
+    }
+    request.session['top_message'] = top_message
+    if logout:
+        endpoint = "/logout/?login=True"
+    response = RedirectResponse(url=endpoint,
+                                status_code=status.HTTP_302_FOUND)
+    return response

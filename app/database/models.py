@@ -14,11 +14,12 @@ class User(Base):
 
     profile: Mapped["UserProfile"] = relationship(back_populates="user", uselist=False, cascade="all, delete-orphan")
 
+
 class UserProfile(Base):
     __tablename__ = "user_profiles"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), unique=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), unique=True)
     first_name: Mapped[str] = mapped_column(index=True, nullable=True)
     last_name: Mapped[str] = mapped_column(index=True, nullable=True)
     phone_number: Mapped[str] = mapped_column(index=True, nullable=True)
@@ -26,5 +27,3 @@ class UserProfile(Base):
     ass_size: Mapped[int] = mapped_column(index=True, nullable=True)
 
     user: Mapped[User] = relationship(back_populates="profile")
-
-
