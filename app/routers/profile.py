@@ -4,8 +4,7 @@ from fastapi import (APIRouter,
                      Request,
                      Form,
                      UploadFile,
-                     File,
-                     HTTPException)
+                     File)
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -156,17 +155,6 @@ async def update_profile(request: Request,
                                        message_icon=OK_ICON,
                                        message_text=f"{user.username}, Your profile has been updated!",
                                        endpoint="/protected/me")
-
-    #
-    #
-    # new_top_message = {
-    #     "class": "alert alert-success rounded",
-    #     "icon": OK_ICON,
-    #     "text": ", your data successfully registered"
-    # }
-    # request.session['top_message'] = new_top_message
-    #
-    # return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.get("/profile/{user_id}/delete", response_class=HTMLResponse)

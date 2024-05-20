@@ -1,7 +1,6 @@
 from fastapi import (APIRouter,
                      Form,
                      Depends,
-                     HTTPException,
                      Request)
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -16,7 +15,7 @@ from app.routers.login import check_user
 from app.database.crud import (create_user,
                                get_user_by_username)
 from app.tools.functions import redirect_with_message
-from templates.icons import WARNING_ICON, WARNING_CLASS, OK_ICON, OK_CLASS, USER_DELETE_ICON, USER_REGISTER_ICON
+from templates.icons import WARNING_ICON, WARNING_CLASS, USER_REGISTER_ICON
 
 
 router = APIRouter(tags=['user register'])

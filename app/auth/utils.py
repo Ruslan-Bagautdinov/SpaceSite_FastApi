@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 
 from datetime import datetime, timedelta
 from jwt import encode, decode, ExpiredSignatureError, InvalidTokenError
-from base64 import b64encode, b64decode
+
 
 from app.config import (ALGORITHM,
                         SECRET_KEY,
