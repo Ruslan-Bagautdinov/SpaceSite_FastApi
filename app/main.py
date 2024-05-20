@@ -20,7 +20,7 @@ from app.config import SECRET_KEY, BASE_DIR
 
 def run_migration_at_start():
 
-    #  first time rin in shell: alembic init -t async alembic
+    #  first time run in shell: $ alembic init -t async alembic
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     print('. . . Revision started. . . ')
