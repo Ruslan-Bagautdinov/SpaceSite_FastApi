@@ -34,7 +34,7 @@ def run_migration_at_start():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    run_migration_at_start()
+    # run_migration_at_start()
     yield
 
 

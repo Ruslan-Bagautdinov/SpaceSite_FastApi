@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+import os
 
 from app.database.models import User, UserProfile
 from app.auth.schemas import UserCreate, UserProfileUpdate
@@ -56,8 +57,8 @@ async def update_user_profile(db: AsyncSession, user_id: int, user_profile: User
             db_user.last_name = user_profile.last_name
         if user_profile.phone_number is not None:
             db_user.phone_number = user_profile.phone_number
-        if user_profile.photo is not None:
-            db_user.photo = user_profile.photo
+        if user_profile.user_photo is not None:
+            db_user.user_photo = user_profile.user_photo
         if user_profile.user_age is not None:
             db_user.user_age = user_profile.user_age
         await db.commit()

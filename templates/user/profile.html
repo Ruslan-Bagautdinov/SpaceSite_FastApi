@@ -11,8 +11,8 @@
       <div class="row text-start">
 
       <div class="col-4 col-sm-3">
-            <label for="photo">
-              <img id="avatar" src="data:image/png;base64,{{ profile.photo }}" class="img-fluid" alt="User Photo" style="cursor: pointer; border-radius: 5px 0 5px 0;">
+            <label for="user_photo">
+              <img id="avatar" src="data:image/png;base64,{{ profile.user_photo }}" class="img-fluid" alt="User Photo" style="cursor: pointer; border-radius: 5px 0 5px 0;">
             </label>
       </div>
 
@@ -69,8 +69,8 @@
     </div>
 
     <div class="mb-3  mx-3">
-      <label for="photo" class="form-label">User's avatar:</label>
-      <input class="form-control" type="file" id="photo" name="photo" />
+      <label for="user_photo" class="form-label">User's avatar:</label>
+      <input class="form-control" type="file" id="user_photo" name="user_photo" />
     </div>
 
     <div class="mb-3  mx-3">
@@ -125,7 +125,7 @@ function previewAvatar(event) {
 }
 
 // Add an event listener to the file input to preview the avatar
-document.getElementById('photo').addEventListener('change', previewAvatar);
+document.getElementById('user_photo').addEventListener('change', previewAvatar);
 
 // Add an event listener to the form to handle the submit event
 document.getElementById('avatarForm').addEventListener('submit', function(event) {
@@ -142,7 +142,7 @@ document.getElementById('avatarForm').addEventListener('submit', function(event)
         console.log('Success:', data);
         // Update the avatar image after the file is processed on the server
         var output = document.getElementById('avatar');
-        output.src = URL.createObjectURL(event.target.photo.files[0]);
+        output.src = URL.createObjectURL(event.target.user_photo.files[0]);
     })
     .catch((error) => {
         console.error('Error:', error);

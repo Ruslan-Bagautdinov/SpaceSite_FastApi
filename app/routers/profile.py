@@ -84,16 +84,16 @@ async def get_profile(request: Request,
     profile.update(profile_addon)
 
     default_avatar_path = "static/img/default_avatar.jpg"
-    if result_profile.photo and os.path.exists(result_profile.photo):
-        photo_base64 = await read_and_encode_photo(result_profile.photo)
-        if photo_base64:
-            profile['photo'] = photo_base64
+    if result_profile.user_photo and os.path.exists(result_profile.user_photo):
+        user_photo_base64 = await read_and_encode_photo(result_profile.user_photo)
+        if user_photo_base64:
+            profile['user_photo'] = user_photo_base64
         else:
             default_avatar_base64 = await read_and_encode_photo(default_avatar_path)
-            profile['photo'] = default_avatar_base64
+            profile['user_photo'] = default_avatar_base64
     else:
         default_avatar_base64 = await read_and_encode_photo(default_avatar_path)
-        profile['photo'] = default_avatar_base64
+        profile['user_photo'] = default_avatar_base64
 
     return templates.TemplateResponse("user/profile.html",
                                       {"request": request,
@@ -110,7 +110,7 @@ async def update_profile(request: Request,
                          first_name: Optional[str] = Form(None),
                          last_name: Optional[str] = Form(None),
                          phone_number: Optional[str] = Form(None),
-                         photo: Optional[UploadFile] = File(None),
+                         user_photo: Optional[UploadFile] = File(None),
                          user_age: Optional[str] = Form(None),
                          db: AsyncSession = Depends(get_session)
                          ):
@@ -124,9 +124,9 @@ async def update_profile(request: Request,
                                            logout=True
                                            )
 
-    previous_photo_path = user_profile.photo
-    if photo and photo.filename:
-        if photo.content_type not in ['image/jpeg', 'image/png']:
+    previous_photo_path = user_profile.user_photo
+    if user_photo and user_photo.filename:
+        if user_photo.content_type not in ['image/jpeg', 'image/png']:
             return await redirect_with_message(request=request,
                                                message_class=WARNING_CLASS,
                                                message_icon=WARNING_ICON,
@@ -134,8 +134,8 @@ async def update_profile(request: Request,
                                                endpoint="/protected/me"
                                                )
 
-        file_location = f"{IMAGE_DIR}/{photo.filename}"
-        await save_upload_file(photo, file_location)
+        file_location = f"{IMAGE_DIR}/{user_photo.filename}"
+        await save_upload_file(user_photo, file_location)
 
         if previous_photo_path and os.path.exists(previous_photo_path):
             os.remove(previous_photo_path)
@@ -145,7 +145,7 @@ async def update_profile(request: Request,
     user_profile = UserProfileUpdate(first_name=first_name,
                                      last_name=last_name,
                                      phone_number=phone_number,
-                                     photo=file_location,
+                                     user_photo=file_location,
                                      user_age=user_age)
 
     await update_user_profile(db, user_id, user_profile)
@@ -174,7 +174,13 @@ async def delete_user_profile(user_id: int,
                               db: AsyncSession = Depends(get_session),
                               user: TokenData | None = Depends(check_user)):
 
+    user_profile = await get_user_profile(db, user_id)
+    previous_photo_path = user_profile.user_photo
+
     if await delete_user(db, user_id):
+        if previous_photo_path and os.path.exists(previous_photo_path):
+            os.remove(previous_photo_path)
+
         return await redirect_with_message(request=request,
                                            message_class=WARNING_CLASS,
                                            message_icon=USER_DELETE_ICON,
