@@ -3,12 +3,34 @@ from fastapi import (UploadFile,
                      status
                      )
 from fastapi.responses import RedirectResponse
+
+from datetime import datetime
+from time import sleep
+
+import subprocess
 import aiofiles
 import base64
 import httpx
 import random
 
 from app.config import UNSPLASH_ACCESS_KEY
+
+
+def perform_migrations():
+    result = subprocess.run(['alembic', 'current'], capture_output=True, text=True)
+    if 'heads with current' not in result.stdout:
+        print('Alembic not initialized...')
+        subprocess.run(['alembic', 'init', 'alembic'])
+        print('Alembic initialized')
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    print('Alembic revision started...')
+    subprocess.run(['alembic', 'revision', '--autogenerate', '-m', now])
+    print('Alembic revision finished')
+    sleep(2)
+    print('Alembic migration started...')
+    subprocess.run(['alembic', 'upgrade', 'head'])
+    print('Alembic migration finished')
 
 
 async def save_upload_file(upload_file: UploadFile, destination: str):

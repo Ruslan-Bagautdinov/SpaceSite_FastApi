@@ -5,36 +5,21 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from contextlib import asynccontextmanager
 
-from subprocess import call
-from datetime import datetime
-from time import sleep
-
+from alembic.config import Config
 
 from app.routers.root import router as root_router
 from app.routers.register import router as register_router
 from app.routers.login import router as login_router
 from app.routers.profile import router as profile_router
 from app.auth.middleware import check_access_token
-from app.config import SECRET_KEY, BASE_DIR
+from app.tools.functions import perform_migrations
 
-
-def run_migration_at_start():
-
-    #  first time run in shell: $ alembic init -t async alembic
-
-    now = datetime.now().strftime("%Y-%m-%d %H:%M")
-    print('. . . Revision started. . . ')
-    call(f'alembic revision --autogenerate -m f"{now}" ', shell=True)
-    print('. . . Revision finished. . . ')
-    sleep(2)
-    print('. . . Migration started. . . ')
-    call(f'alembic upgrade head ', shell=True)
-    print('. . . Migration finished. . . ')
+from app.config import SECRET_KEY, BASE_DIR, DATABASE_URL
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # run_migration_at_start()
+    # perform_migrations()
     yield
 
 
@@ -45,6 +30,8 @@ app.middleware("http")(check_access_token)
 templates = Jinja2Templates(directory=f"{BASE_DIR}/templates")
 app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 
+alembic_config = Config('alembic.ini')
+alembic_config.set_main_option('sqlalchemy.url', DATABASE_URL)
 
 app.include_router(root_router)
 app.include_router(register_router)
