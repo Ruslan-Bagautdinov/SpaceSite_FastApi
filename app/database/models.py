@@ -24,6 +24,6 @@ class UserProfile(Base):
     last_name: Mapped[str] = mapped_column(index=True, nullable=True)
     phone_number: Mapped[str] = mapped_column(index=True, nullable=True)
     photo: Mapped[str] = mapped_column(index=True, nullable=True)
-    ass_size: Mapped[int] = mapped_column(index=True, nullable=True)
+    user_age: Mapped[int] = mapped_column(index=True, nullable=True)
 
     user: Mapped[User] = relationship(back_populates="profile")

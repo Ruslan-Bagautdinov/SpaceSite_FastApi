@@ -79,7 +79,7 @@ async def get_profile(request: Request,
         'first_name': result_profile.first_name,
         'last_name': result_profile.last_name,
         'phone_number': result_profile.phone_number,
-        'ass_size': result_profile.ass_size}
+        'user_age': result_profile.user_age}
 
     profile.update(profile_addon)
 
@@ -111,7 +111,7 @@ async def update_profile(request: Request,
                          last_name: Optional[str] = Form(None),
                          phone_number: Optional[str] = Form(None),
                          photo: Optional[UploadFile] = File(None),
-                         ass_size: Optional[str] = Form(None),
+                         user_age: Optional[str] = Form(None),
                          db: AsyncSession = Depends(get_session)
                          ):
     user = await get_user(db, user_id)
@@ -146,7 +146,7 @@ async def update_profile(request: Request,
                                      last_name=last_name,
                                      phone_number=phone_number,
                                      photo=file_location,
-                                     ass_size=ass_size)
+                                     user_age=user_age)
 
     await update_user_profile(db, user_id, user_profile)
 

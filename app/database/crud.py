@@ -58,8 +58,8 @@ async def update_user_profile(db: AsyncSession, user_id: int, user_profile: User
             db_user.phone_number = user_profile.phone_number
         if user_profile.photo is not None:
             db_user.photo = user_profile.photo
-        if user_profile.ass_size is not None:
-            db_user.ass_size = user_profile.ass_size
+        if user_profile.user_age is not None:
+            db_user.user_age = user_profile.user_age
         await db.commit()
         await db.refresh(db_user)
         return db_user
