@@ -5,19 +5,27 @@ html, body {
 }
 
 body.light-theme {
-
-    background: rgb(248,249,250);
-    background: linear-gradient(
-            180deg,
-            rgba(248,249,250,1) 0%,
-            rgba(248,249,250,1) 45%,
-            rgba(148,152,156,1) 100%
-);
     color: #222222;
     min-height: 100vh;
     margin: 0;
     display: flex;
     flex-direction: column;
+}
+
+body.light-theme::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    background: linear-gradient(
+        180deg,
+        rgba(248,249,250,1) 0%,
+        rgba(248,249,250,1) 45%,
+        rgba(148,152,156,1) 100%
+);
 }
 
 body.light-theme .custom-navbar {
@@ -26,18 +34,27 @@ body.light-theme .custom-navbar {
 }
 
 body.dark-theme {
-    background: rgb(33,37,41);
-background: linear-gradient(
-        180deg,
-        rgba(33,37,41,1) 0%,
-        rgba(33,37,41,1) 45%,
-        rgba(99,107,115,1) 100%
-);
     color: #eeeeee;
     min-height: 100vh;
     margin: 0;
     display: flex;
     flex-direction: column;
+}
+
+body.dark-theme::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    background: linear-gradient(
+        180deg,
+        rgba(33,37,41,1) 0%,
+        rgba(33,37,41,1) 45%,
+        rgba(99,107,115,1) 100%
+);
 }
 
 body.dark-theme .custom-navbar {
