@@ -27,6 +27,7 @@
 
     <!-- Main Content -->
     <div class="container-fluid">
+
         <div class="row text-center">
             <div class="col">
                 <!-- Top message -->
@@ -35,11 +36,12 @@
                         <div class="{{ top_message.class }}" role="alert">
                             {{ top_message.icon | safe }}
                             {{ top_message.text | safe }}
+                        </div>
                     {% endif %}
-        </div>
-{% endblock %}
+                {% endblock %}
             </div>
         </div>
+
         <div class="row text-center">
             <div class="col">
                 <!-- Page Content -->
@@ -54,14 +56,15 @@
                 {% endblock %}
             </div>
         </div>
-    </div>
 
-    <!-- Footer -->
-    <footer class="text-center">
-        <!-- Footer content -->
-        {% block footer_content %}
-        {% endblock %}
-    </footer>
+        <!-- Footer -->
+        <footer class="text-center">
+            <!-- Footer content -->
+            {% block footer_content %}
+            {% endblock %}
+        </footer>
+
+    </div>
 
     {% block scripts %}
     <!-- Light and Dark theme -->
