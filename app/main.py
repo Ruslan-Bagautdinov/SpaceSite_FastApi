@@ -19,7 +19,7 @@ from app.config import SECRET_KEY, BASE_DIR, DATABASE_URL
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # perform_migrations()
+    perform_migrations()
     yield
 
 

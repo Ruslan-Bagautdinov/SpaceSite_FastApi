@@ -27,14 +27,20 @@ def perform_migrations():
         subprocess.run(command)
         print('Alembic initialized')
 
-    now = datetime.now().strftime("%Y-%m-%d %H:%M")
-    print('Alembic revision started...')
-    subprocess.run(['alembic', 'revision', '--autogenerate', '-m', now])
-    print('Alembic revision finished')
-    sleep(2)
-    print('Alembic migration started...')
-    subprocess.run(['alembic', 'upgrade', 'head'])
-    print('Alembic migration finished')
+    version_path = os.path.join(BASE_DIR, 'alembic', 'versions')
+    if os.listdir(version_path):
+        print("Versions directory not empty")
+    else:
+        print("Versions directory empty")
+
+        now = datetime.now().strftime("%Y-%m-%d %H:%M")
+        print('Alembic revision started...')
+        subprocess.run(['alembic', 'revision', '--autogenerate', '-m', now])
+        print('Alembic revision finished')
+        sleep(2)
+        print('Alembic migration started...')
+        subprocess.run(['alembic', 'upgrade', 'head'])
+        print('Alembic migration finished')
 
 
 async def save_upload_file(upload_file: UploadFile, destination: str):

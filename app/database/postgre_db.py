@@ -4,13 +4,7 @@ from sqlalchemy.ext.asyncio import (AsyncSession,
 from sqlalchemy.orm import declarative_base
 
 
-from app.config import POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_DB
-
-DATABASE_URL = (f"postgresql+asyncpg"
-                f"://{POSTGRES_USER}"
-                f":{POSTGRES_PASSWORD}"
-                f"@{POSTGRES_HOST}"
-                f"/{POSTGRES_DB}")
+from app.config import DATABASE_URL
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 

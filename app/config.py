@@ -14,13 +14,14 @@ POSTGRES_USER = getenv('POSTGRES_USER')
 POSTGRES_PASSWORD = getenv('POSTGRES_PASSWORD')
 POSTGRES_DB = getenv('POSTGRES_DB')
 
+DATABASE_URL = (f"postgresql+asyncpg"
+                f"://{POSTGRES_USER}"
+                f":{POSTGRES_PASSWORD}"
+                f"@{POSTGRES_HOST}"
+                f"/{POSTGRES_DB}")
+
 UNSPLASH_ACCESS_KEY = getenv('UNSPLASH_ACCESS_KEY')
 
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 IMAGE_DIR = path.join(BASE_DIR, 'photo')
 
-DATABASE_URL = (f"mysql+pymysql"
-                f"://{POSTGRES_USER}"
-                f":{POSTGRES_PASSWORD}"
-                f"@{POSTGRES_HOST}"
-                f"/{POSTGRES_DB}")
