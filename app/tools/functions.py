@@ -12,15 +12,19 @@ import aiofiles
 import base64
 import httpx
 import random
+import os
 
-from app.config import UNSPLASH_ACCESS_KEY
+from app.config import UNSPLASH_ACCESS_KEY, BASE_DIR
 
 
 def perform_migrations():
-    result = subprocess.run(['alembic', 'current'], capture_output=True, text=True)
-    if 'heads with current' not in result.stdout:
-        print('Alembic not initialized...')
-        subprocess.run(['alembic', 'init', 'alembic'])
+
+    alembic_path = os.path.join(BASE_DIR, 'alembic')
+    if os.path.exists(alembic_path):
+        print("Alembic directory found")
+    else:
+        command = ['alembic', 'init', '-t', 'async', 'alembic']
+        subprocess.run(command)
         print('Alembic initialized')
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
