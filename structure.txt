@@ -1,4 +1,4 @@
-project folder
+Project folder
 ├───📁 alembic/
 │   ├───📁 versions/
 │   ├───📄 env.py
