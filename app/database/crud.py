@@ -2,7 +2,6 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-import os
 
 from app.database.models import User, UserProfile
 from app.auth.schemas import UserCreate, UserProfileUpdate

@@ -50,6 +50,7 @@ async def get_me(request: Request,
                                            logout=True
                                            )
 
+
 @router.get("/profile/{user_id}")
 async def get_profile(request: Request,
                       user_id: int,
