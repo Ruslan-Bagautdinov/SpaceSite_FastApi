@@ -33,12 +33,12 @@ def perform_migrations():
         print("Versions directory not empty")
     else:
         print("Versions directory empty")
-
+        sleep(20)
         now = datetime.now().strftime("%Y-%m-%d %H:%M")
         print('Alembic revision started...')
         subprocess.run(['alembic', 'revision', '--autogenerate', '-m', now])
         print('Alembic revision finished')
-        sleep(2)
+        sleep(10)
         print('Alembic migration started...')
         subprocess.run(['alembic', 'upgrade', 'head'])
         print('Alembic migration finished')
