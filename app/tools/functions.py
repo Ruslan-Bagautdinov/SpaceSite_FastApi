@@ -6,7 +6,8 @@ from fastapi.responses import RedirectResponse
 
 from datetime import datetime
 from time import sleep
-
+from PIL import Image
+import tempfile
 import subprocess
 import aiofiles
 import base64
@@ -43,10 +44,26 @@ def perform_migrations():
         print('Alembic migration finished')
 
 
+def resize_image(input_image_path, size_limit):
+    with Image.open(input_image_path) as img:
+        if max(img.size) > size_limit:
+            aspect_ratio = min(size_limit / img.size[0], size_limit / img.size[1])
+            new_size = (int(img.size[0] * aspect_ratio), int(img.size[1] * aspect_ratio))
+            img = img.resize(new_size, Image.Resampling.LANCZOS)
+        return img
+
+
 async def save_upload_file(upload_file: UploadFile, destination: str):
-    async with aiofiles.open(destination, 'wb') as out_file:
-        while content := await upload_file.read(1024):  # Read file in chunks
-            await out_file.write(content)
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        temp_filename = temp_file.name
+        async with aiofiles.open(temp_filename, 'wb') as out_file:
+            while content := await upload_file.read(1024):  # Read file in chunks
+                await out_file.write(content)
+
+    resized_image = resize_image(temp_filename, 1024)
+    resized_image.save(destination)
+    resized_image.close()
+    os.unlink(temp_filename)
 
 
 async def read_and_encode_photo(photo_path):

@@ -32,15 +32,23 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/me")
-async def get_me(db: AsyncSession = Depends(get_session),
+async def get_me(request: Request,
+                 db: AsyncSession = Depends(get_session),
                  user: TokenData | None = Depends(check_user)):
 
     user_profile = await get_user_by_username(db, user['username'])
-    user_id = user_profile.id
-    return RedirectResponse(f"/protected/profile/{user_id}",
-                            status_code=status.HTTP_302_FOUND
-                            )
-
+    if user_profile:
+        user_id = user_profile.id
+        return RedirectResponse(f"/protected/profile/{user_id}",
+                                status_code=status.HTTP_302_FOUND
+                                )
+    else:
+        return await redirect_with_message(request=request,
+                                           message_class=WARNING_CLASS,
+                                           message_icon=WARNING_ICON,
+                                           message_text="User not found",
+                                           logout=True
+                                           )
 
 @router.get("/profile/{user_id}")
 async def get_profile(request: Request,
