@@ -20,7 +20,6 @@ services:
       - .env
     environment:
       - POSTGRES_HOST=db
-
   db:
     build:
       context: .
@@ -33,6 +32,6 @@ services:
       - .env
 
 volumes:
+  postgres_data:
   alembic:
   photo:
-  postgres_data:
