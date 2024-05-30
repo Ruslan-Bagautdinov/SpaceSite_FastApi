@@ -25,7 +25,7 @@ Once composed, it takes time (half a minute to a minute) to wait for the databas
 ## Usage
 
 1. **Access the application**
-    - Open your web browser and navigate to `http://localhost:5000`.
+    - Open your web browser and navigate to `http://localhost:8000`.
 
 ## Contributing
 
