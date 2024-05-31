@@ -6,39 +6,46 @@ This is a demo website built with FastAPI. It uses JWT in cookies for authentica
 
 ## Installation
 
-1. **Clone the repository**
-    ```
-    git clone https://github.com/Ruslan-Bagautdinov/SpaceSite_Fastapi.git
-    ```
+Clone the repository
 
-2. **Navigate to the directory**
-    ```
-    cd SpaceSite_Fastapi
-    ```
+```bash
+git git clone https://github.com/Ruslan-Bagautdinov/SpaceSite_Fastapi.git
+```
 
-3. SECRET_KEY='<>
-ACCESS_TOKEN_EXPIRE_MINUTES=15
-REFRESH_TOKEN_EXPIRE_MINUTES=10080
-ALGORITHM=HS256
+Navigate to the directory
 
-POSTGRES_HOST='localhost'
-POSTGRES_PORT='5432'
-POSTGRES_DB='fastapi_spacesite_pg'
-POSTGRES_USER='postgres'
-POSTGRES_PASSWORD='P0STGR3sql237996Qw!'
+```bash
+cd SpaceSite_Fastapi
+```
 
-UNSPLASH_ACCESS_KEY='-_8j_P9TQ6fKmXnyk531pycsJCmy12s-roGAABWBkRg'
+Optional: Set the following environment variables in a `.env` file in the root directory for a custom database connection, a strong secret key, and custom token expiration limits. For random images on the home page, add your own Unsplash access key to the `.env` file.
 
-4. **Build and run the Docker containers**
-    ```
-    docker-compose up --build -d
-    ```
+```bash
+# .env
+SECRET_KEY=<your-secret-key>
+ACCESS_TOKEN_EXPIRE_MINUTES=<your-access-token-expire-minutes>
+REFRESH_TOKEN_EXPIRE_MINUTES=<your-refresh-token-expire-minutes>
+POSTGRES_HOST=<your-postgres-host>
+POSTGRES_PORT=<your-postgres-port>
+POSTGRES_DB=<your-postgres-database>
+POSTGRES_USER=<your-postgres-user>
+POSTGRES_PASSWORD=<your-postgres-password>
+UNSPLASH_ACCESS_KEY=<your-unsplash-access-key>
+```
+
+Build and run the Docker containers
+
+```bash
+docker-compose up --build -d
+```
+
 Once composed, it takes time (half a minute to a minute) to wait for the database to initialize and perform further migrations and upgrades using Alembic, please be patient.
 
 ## Usage
 
-1. **Access the application**
-    - Open your web browser and navigate to `http://localhost:8000`.
+Access the application
+
+Open your web browser and navigate to http://localhost:8000.
 
 ## Contributing
 
