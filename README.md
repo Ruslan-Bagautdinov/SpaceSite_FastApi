@@ -16,7 +16,20 @@ This is a demo website built with FastAPI. It uses JWT in cookies for authentica
     cd SpaceSite_Fastapi
     ```
 
-3. **Build and run the Docker containers**
+3. SECRET_KEY='<>
+ACCESS_TOKEN_EXPIRE_MINUTES=15
+REFRESH_TOKEN_EXPIRE_MINUTES=10080
+ALGORITHM=HS256
+
+POSTGRES_HOST='localhost'
+POSTGRES_PORT='5432'
+POSTGRES_DB='fastapi_spacesite_pg'
+POSTGRES_USER='postgres'
+POSTGRES_PASSWORD='P0STGR3sql237996Qw!'
+
+UNSPLASH_ACCESS_KEY='-_8j_P9TQ6fKmXnyk531pycsJCmy12s-roGAABWBkRg'
+
+4. **Build and run the Docker containers**
     ```
     docker-compose up --build -d
     ```
