@@ -18,6 +18,7 @@ DATABASE_URL = (f"postgresql+asyncpg"
                 f"://{POSTGRES_USER}"
                 f":{POSTGRES_PASSWORD}"
                 f"@{POSTGRES_HOST}"
+                f":{POSTGRES_PORT}"
                 f"/{POSTGRES_DB}")
 
 UNSPLASH_ACCESS_KEY = getenv('UNSPLASH_ACCESS_KEY', 'unsplash-access-key')

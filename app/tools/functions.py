@@ -45,26 +45,62 @@ def perform_migrations():
         print('Alembic migration finished')
 
 
-def resize_image(input_image_path, size_limit):
-    with Image.open(input_image_path) as img:
-        if max(img.size) > size_limit:
-            aspect_ratio = min(size_limit / img.size[0], size_limit / img.size[1])
-            new_size = (int(img.size[0] * aspect_ratio), int(img.size[1] * aspect_ratio))
-            img = img.resize(new_size, Image.Resampling.LANCZOS)
-        return img
+# def resize_image(input_image_path, size_limit):
+#     with Image.open(input_image_path) as img:
+#         if max(img.size) > size_limit:
+#             aspect_ratio = min(size_limit / img.size[0], size_limit / img.size[1])
+#             new_size = (int(img.size[0] * aspect_ratio), int(img.size[1] * aspect_ratio))
+#             img = img.resize(new_size, Image.Resampling.LANCZOS)
+#         return img  # Always return the image object
+
+
+# async def save_upload_file(upload_file: UploadFile, destination: str):
+#     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+#         temp_filename = temp_file.name
+#         async with aiofiles.open(temp_filename, 'wb') as out_file:
+#             while content := await upload_file.read(1024):  # Read file in chunks
+#                 await out_file.write(content)
+#
+#     # resized_image = resize_image(temp_filename, 1024)
+#     # if resized_image is not None:  # Check if the image needs to be resized
+#     #     resized_image.save(destination)
+#     #     resized_image.close()
+#     # else:
+#         with Image.open(temp_filename) as img:
+#             img.save(destination)
+#             img.close()  # Save and close the original image
+#     os.unlink(temp_filename)
+
+
+# async def save_upload_file(upload_file: UploadFile, destination: str):
+#     async with aiofiles.open(destination, 'wb') as out_file:
+#         while content := await upload_file.read(1024):  # Read file in chunks
+#             await out_file.write(content)
 
 
 async def save_upload_file(upload_file: UploadFile, destination: str):
+    if upload_file is None:
+        print("No file provided.")
+        return
+
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         temp_filename = temp_file.name
         async with aiofiles.open(temp_filename, 'wb') as out_file:
             while content := await upload_file.read(1024):  # Read file in chunks
                 await out_file.write(content)
 
-    resized_image = resize_image(temp_filename, 1024)
-    resized_image.save(destination)
-    resized_image.close()
-    os.unlink(temp_filename)
+    try:
+        img = Image.open(temp_filename)
+        width, height = img.size
+
+        if max(width, height) > 1024:
+            aspect_ratio = min(1024 / width, 1024 / height)
+            new_size = (int(width * aspect_ratio), int(height * aspect_ratio))
+            img = img.resize(new_size, Image.Resampling.LANCZOS)
+
+        img.save(destination)
+    finally:
+        os.remove(temp_filename)
 
 
 async def read_and_encode_photo(photo_path):
