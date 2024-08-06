@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %} Edit Post {% endblock %}
+{% block head %} {{ super() }} {% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h1>Edit Post</h1>
+    <form action="/posts/{{ post.id }}/edit" method="post">
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea class="form-control" id="content" name="content" rows="10" required>{{ post.content }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Post</button>
+    </form>
+</div>
+{% endblock %}

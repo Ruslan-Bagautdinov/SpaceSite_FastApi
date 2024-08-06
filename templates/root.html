@@ -3,20 +3,21 @@
 {% block head %} {{ super() }} {% endblock %}
 
 {% block unsplash_content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="image-container">
-                <img src="{{ unsplash_photo }}" class="img-fluid" alt="Cosmos Image">
-            </div>
+<div class="unsplash-container">
+    <img src="{{ unsplash_photo }}" alt="Unsplash Photo" class="unsplash-image">
+    <div class="posts-container">
+        {% for post in posts %}
+        <div class="single-post">
+            <p class="post-content">{{ post.truncated_content() }}</p>
+            <p class="post-meta"><small>By {{ post.user.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
 
 {% block footer_content %}
-    Photo by <a href="https://unsplash.com/"
-                style="text-decoration: None; color: #ffffff">Unsplash</a>
+    Photo by <a href="https://unsplash.com/" style="text-decoration: None; color: #ffffff">Unsplash</a>
 {% endblock %}
 
 {% block scripts %} {{ super() }} {% endblock %}

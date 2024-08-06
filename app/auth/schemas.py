@@ -1,3 +1,5 @@
+
+
 from pydantic import BaseModel
 from typing import Optional
 
@@ -31,3 +33,35 @@ class UserProfileUpdate(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

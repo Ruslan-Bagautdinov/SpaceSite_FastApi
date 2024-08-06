@@ -1,11 +1,11 @@
 from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.database.models import User, UserProfile
 from app.auth.schemas import UserCreate, UserProfileUpdate
 from app.auth.utils import get_password_hash, verify_password
+from app.database.models import User, UserProfile, Post
 
 
 async def get_user_by_username(db: AsyncSession, username: str):
@@ -76,3 +76,42 @@ async def delete_user(db: AsyncSession, user_id: int):
         await db.commit()
         return True
     return False
+
+
+async def get_posts_by_user(db: AsyncSession, user_id: int):
+    query = select(Post).filter(Post.user_id == user_id).order_by(Post.created_at.desc())
+    result = await db.execute(query)
+    return result.scalars().all()
+
+
+async def create_post(db: AsyncSession, content: str, user_id: int):
+    post = Post(content=content, user_id=user_id)
+    db.add(post)
+    await db.commit()
+    await db.refresh(post)
+    return post
+
+
+async def get_post_by_id(db: AsyncSession, post_id: int):
+    query = select(Post).filter(Post.id == post_id)
+    result = await db.execute(query)
+    return result.scalars().first()
+
+
+async def update_post(db: AsyncSession, post_id: int, content: str):
+    post = await get_post_by_id(db, post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    post.content = content
+    await db.commit()
+    await db.refresh(post)
+    return post
+
+
+async def delete_post(db: AsyncSession, post_id: int):
+    post = await get_post_by_id(db, post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    await db.delete(post)
+    await db.commit()
+    return {"message": "Post deleted successfully"}

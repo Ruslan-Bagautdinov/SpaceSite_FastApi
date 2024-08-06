@@ -1,3 +1,6 @@
+/* mystyle.css */
+
+/* General body styles for light and dark themes */
 html, body {
   height: 100%;
   margin: 0;
@@ -25,7 +28,7 @@ body.light-theme::before {
         rgba(248,249,250,1) 0%,
         rgba(248,249,250,1) 45%,
         rgba(148,152,156,1) 100%
-);
+    );
 }
 
 body.light-theme .custom-navbar {
@@ -54,7 +57,7 @@ body.dark-theme::before {
         rgba(33,37,41,1) 0%,
         rgba(33,37,41,1) 45%,
         rgba(99,107,115,1) 100%
-);
+    );
 }
 
 body.dark-theme .custom-navbar {
@@ -91,4 +94,60 @@ body.light-theme .custom-navbar .navbar-toggler-icon {
     border-radius: 10px;
     width: 100%;
     height: auto;
+}
+
+/* New styles for Unsplash image and posts */
+.unsplash-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.unsplash-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.posts-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    justify-content: space-around;
+    flex-grow: 1;
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    align-content: flex-start;
+}
+
+.single-post {
+    flex: 1 1 calc(33.33% - 20px);
+    margin: 10px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.post-content {
+    margin-bottom: 0.25rem;
+}
+
+.post-meta {
+    margin-bottom: 0.25rem;
+    color: #ddd;
+}
+
+/* New styles for post links */
+.post-link {
+    text-decoration: none;
+    color: #333;
 }
