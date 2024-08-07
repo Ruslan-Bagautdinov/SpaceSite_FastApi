@@ -4,7 +4,6 @@ from fastapi import (HTTPException,
 from fastapi.responses import RedirectResponse
 from jwt import PyJWTError
 
-
 from app.auth.utils import (verify_token,
                             refresh_access_token,
                             set_tokens_in_cookies)
@@ -33,7 +32,6 @@ async def handle_token_refresh(refresh_token, call_next, request):
 
 
 async def check_access_token(request: Request, call_next):
-
     if request.url.path.startswith('/protected'):
         access_token = request.cookies.get("access_token")
         refresh_token = request.cookies.get("refresh_token")
@@ -62,13 +60,9 @@ async def check_user(request: Request):
     if refresh_token is None:
         return None
     try:
-        username = verify_token(refresh_token, "refresh_token")
-        return {'username': username}
+        username, role = verify_token(refresh_token, "refresh_token")
+        return {'username': username, 'role': role}
     except HTTPException:
         return None
     except PyJWTError:
         return None
-
-
-
-

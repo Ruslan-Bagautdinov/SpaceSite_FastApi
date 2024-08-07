@@ -19,6 +19,20 @@
       <div class="col-8 col-sm-9">
           <div class="row mt-5">
               <div class="col">
+                  <h3>Role: {{ profile.role }}</h3>
+                  {% if user.role == 'admin' %}
+                  <div class="mb-3 mx-3">
+                    <label for="role" class="form-label">Change Role:</label>
+                    <select class="form-control" id="role" name="role">
+                      <option value="user" {% if profile.role == 'user' %}selected{% endif %}>User</option>
+                      <option value="admin" {% if profile.role == 'admin' %}selected{% endif %}>Admin</option>
+                    </select>
+                  </div>
+                  {% endif %}
+              </div>
+          </div>
+          <div class="row mt-5">
+              <div class="col">
                   <h3>Username: {{ profile.username }}</h3>
               </div>
           </div>
@@ -114,7 +128,6 @@
   {{ super() }}
     <script>
 function previewAvatar(event) {
-    // Check if the event target is the avatar image
     if (event.target.files && event.target.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
@@ -125,30 +138,7 @@ function previewAvatar(event) {
     }
 }
 
-// Add an event listener to the file input to preview the avatar
 document.getElementById('user_photo').addEventListener('change', previewAvatar);
-
-// Add an event listener to the form to handle the submit event
-document.getElementById('avatarForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting normally
-    // Here you can add your AJAX request or other logic to handle the file upload
-    // For example, you can use the FormData API to send the file to the server
-    var formData = new FormData(event.target);
-    fetch('/protected/profile/{{ profile.user_id }}/update', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        // Update the avatar image after the file is processed on the server
-        var output = document.getElementById('avatar');
-        output.src = URL.createObjectURL(event.target.user_photo.files[0]);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-});
     </script>
 
     <script>

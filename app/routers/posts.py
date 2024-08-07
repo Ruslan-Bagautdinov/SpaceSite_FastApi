@@ -18,6 +18,13 @@ router = APIRouter(tags=['posts'])
 templates = Jinja2Templates(directory="templates")
 
 
+async def handle_top_message(request: Request):
+    top_message = request.session.get('top_message')
+    if top_message is not None:
+        request.session.pop('top_message', None)
+    return top_message
+
+
 @router.get('/posts')
 async def my_posts(request: Request, db: AsyncSession = Depends(get_session), user: TokenData = Depends(check_user)):
     username = user['username']
@@ -30,12 +37,23 @@ async def my_posts(request: Request, db: AsyncSession = Depends(get_session), us
                                            endpoint="/")
     user_id = user_obj.id
     posts = await get_posts_by_user(db, user_id)
-    return templates.TemplateResponse("user/my_posts.html", {"request": request, "posts": posts, "user": user})
+    top_message = await handle_top_message(request)
+    return templates.TemplateResponse("user/my_posts.html", {
+        "request": request,
+        "posts": posts,
+        "user": user,
+        "top_message": top_message
+    })
 
 
 @router.get('/posts/create')
 async def create_post_form(request: Request, user: TokenData = Depends(check_user)):
-    return templates.TemplateResponse("user/create_post.html", {"request": request, "user": user})
+    top_message = await handle_top_message(request)
+    return templates.TemplateResponse("user/create_post.html", {
+        "request": request,
+        "user": user,
+        "top_message": top_message
+    })
 
 
 @router.post('/posts/create')
@@ -91,7 +109,13 @@ async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depe
                                            message_icon=WARNING_ICON,
                                            message_text="You do not have permission to edit this post",
                                            endpoint="/posts")
-    return templates.TemplateResponse("user/edit_post.html", {"request": request, "post": post, "user": user})
+    top_message = await handle_top_message(request)
+    return templates.TemplateResponse("user/edit_post.html", {
+        "request": request,
+        "post": post,
+        "user": user,
+        "top_message": top_message
+    })
 
 
 @router.post('/posts/{post_id}/edit')

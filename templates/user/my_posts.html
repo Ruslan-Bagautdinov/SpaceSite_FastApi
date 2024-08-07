@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block title %} My Posts {% endblock %}
-{% block head %} {{ super() }} {% endblock %}
+{% block head %}
+    {{ super() }}
+    <style>
+        .post-link {
+            text-decoration: none; /* Remove underline */
+            color: #000; /* Black color */
+        }
+    </style>
+{% endblock %}
 
 {% block page_content %}
     <div class="container">

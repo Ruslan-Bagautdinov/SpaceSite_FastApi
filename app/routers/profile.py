@@ -1,3 +1,6 @@
+import os
+from typing import Optional
+
 from fastapi import (APIRouter,
                      Depends,
                      status,
@@ -7,25 +10,21 @@ from fastapi import (APIRouter,
                      File)
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
-import os
 
-
-from app.auth.schemas import TokenData, UserProfileUpdate
 from app.auth.middleware import check_user
-from app.database.postgre_db import get_session
+from app.database.models import UserRole
+from app.auth.schemas import TokenData, UserProfileUpdate
+from app.config import IMAGE_DIR
 from app.database.crud import (get_user,
                                get_user_profile,
                                get_user_by_username,
                                update_user_profile,
                                delete_user)
-from app.config import IMAGE_DIR
-from app.tools.functions import save_upload_file, read_and_encode_photo
+from app.database.postgre_db import get_session
 from app.tools.functions import redirect_with_message
+from app.tools.functions import save_upload_file, read_and_encode_photo
 from templates.icons import WARNING_ICON, WARNING_CLASS, OK_ICON, OK_CLASS, USER_DELETE_ICON
-
 
 router = APIRouter(tags=['user profile'], prefix='/protected')
 templates = Jinja2Templates(directory="templates")
@@ -35,7 +34,6 @@ templates = Jinja2Templates(directory="templates")
 async def get_me(request: Request,
                  db: AsyncSession = Depends(get_session),
                  user: TokenData | None = Depends(check_user)):
-
     user_profile = await get_user_by_username(db, user['username'])
     if user_profile:
         user_id = user_profile.id
@@ -73,7 +71,9 @@ async def get_profile(request: Request,
     profile = {
         'user_id': result_user.id,
         'username': result_user.username,
-        'email': result_user.email}
+        'email': result_user.email,
+        'role': result_user.role.value  # Add role to profile
+    }
 
     result_profile = await get_user_profile(db, user_id)
     if not result_profile:
@@ -121,7 +121,9 @@ async def update_profile(request: Request,
                          phone_number: Optional[str] = Form(None),
                          user_photo: Optional[UploadFile] = File(None),
                          user_age: Optional[str] = Form(None),
-                         db: AsyncSession = Depends(get_session)
+                         role: Optional[str] = Form(None),  # Add role parameter
+                         db: AsyncSession = Depends(get_session),
+                         current_user: TokenData = Depends(check_user)  # Add current_user dependency
                          ):
     user = await get_user(db, user_id)
     user_profile = await get_user_profile(db, user_id)
@@ -130,7 +132,7 @@ async def update_profile(request: Request,
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="User profile not found",
-                                           logout=True
+                                           endpoint="/"
                                            )
 
     previous_photo_path = user_profile.user_photo
@@ -140,7 +142,7 @@ async def update_profile(request: Request,
                                                message_class=WARNING_CLASS,
                                                message_icon=WARNING_ICON,
                                                message_text="File must be an image!",
-                                               endpoint="/protected/me"
+                                               endpoint=f"/protected/profile/{user_id}"
                                                )
 
         file_location = f"{IMAGE_DIR}/{user_photo.filename}"
@@ -159,17 +161,31 @@ async def update_profile(request: Request,
 
     await update_user_profile(db, user_id, user_profile)
 
+    # Update user role if provided
+    if role:
+        user.role = UserRole[role]
+        await db.commit()
+        await db.refresh(user)
+
+    # Redirect based on the role of the current user
+    if current_user['role'] == 'admin':
+        endpoint = f"/protected/profile/{user_id}"
+    else:
+        endpoint = "/protected/me"
+
     return await redirect_with_message(request=request,
                                        message_class=OK_CLASS,
                                        message_icon=OK_ICON,
                                        message_text=f"{user.username}, Your profile has been updated!",
-                                       endpoint="/protected/me")
+                                       endpoint=endpoint)
 
 
 @router.get("/profile/{user_id}/delete", response_class=HTMLResponse)
 async def confirm_delete(request: Request,
                          user_id: int,
                          user: TokenData | None = Depends(check_user)):
+    if user['role'] == 'admin':
+        return await delete_user_profile(user_id, request)
     return templates.TemplateResponse("user/confirm_delete.html",
                                       {"request": request,
                                        "user_id": user_id,
@@ -182,7 +198,6 @@ async def delete_user_profile(user_id: int,
                               request: Request,
                               db: AsyncSession = Depends(get_session),
                               user: TokenData | None = Depends(check_user)):
-
     user_profile = await get_user_profile(db, user_id)
     previous_photo_path = user_profile.user_photo
 

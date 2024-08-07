@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %} Create Post {% endblock %}
-{% block head %} {{ super() }} {% endblock %}
+{% block head %}
+    {{ super() }}
+    <style>
+        .btn {
+            margin-top: 10px; /* Add top padding to buttons */
+        }
+    </style>
+{% endblock %}
 
 {% block page_content %}
 <div class="container">
@@ -11,6 +18,7 @@
             <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Create Post</button>
+        <a href="/posts" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 {% endblock %}

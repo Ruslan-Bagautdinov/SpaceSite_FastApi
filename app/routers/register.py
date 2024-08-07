@@ -1,22 +1,21 @@
+from typing import Annotated
+
 from fastapi import (APIRouter,
                      Form,
                      Depends,
                      Request)
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
-from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.postgre_db import get_session
 from app.auth.schemas import UserCreate, TokenData, User
 from app.auth.utils import authenticated_root_redirect
-from app.routers.login import check_user
 from app.database.crud import (create_user,
                                get_user_by_username)
+from app.database.postgre_db import get_session
+from app.routers.login import check_user
 from app.tools.functions import redirect_with_message
 from templates.icons import WARNING_ICON, WARNING_CLASS, USER_REGISTER_ICON
-
 
 router = APIRouter(tags=['user register'])
 templates = Jinja2Templates(directory="templates")
@@ -61,4 +60,4 @@ async def register_user(request: Request,
         "text": f"User {username} has been created"
     }
     request.session['top_message'] = new_top_message
-    return await authenticated_root_redirect(request, user.username)
+    return await authenticated_root_redirect(request, user.username, role="user")

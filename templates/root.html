@@ -3,15 +3,49 @@
 {% block head %} {{ super() }} {% endblock %}
 
 {% block unsplash_content %}
-<div class="unsplash-container">
-    <img src="{{ unsplash_photo }}" alt="Unsplash Photo" class="unsplash-image">
-    <div class="posts-container">
-        {% for post in posts %}
-        <div class="single-post">
-            <p class="post-content">{{ post.truncated_content() }}</p>
-            <p class="post-meta"><small>By {{ post.user.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="image-container" style="background-image: url('{{ unsplash_photo }}'); background-size: cover; background-position: center; height: 100vh; display: flex; flex-direction: column;">
+                <div class="posts-container">
+                    <div class="row">
+                        {% for post in posts %}
+                        <div class="col-md-4">
+                            <div class="single-post" style="margin: 10px; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 10px; border: 1px solid #ccc; color: #fff; box-sizing: border-box;">
+                                <p class="post-content" style="margin-bottom: 0.25rem;">{{ post.truncated_content() }}</p>
+                                <p class="post-meta" style="margin-bottom: 0.25rem;"><small style="color: #ddd;">By {{ post.user.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="pagination-container" style="align-self: center; margin-top: auto;">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if page > 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; first</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page - 1 }}">previous</a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Page {{ page }} of {{ total_pages }}</a>
+                            </li>
+                            {% if page < total_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page + 1 }}">next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ total_pages }}">last &raquo;</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

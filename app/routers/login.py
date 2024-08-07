@@ -64,3 +64,19 @@ async def logout_user(login: bool = False):
     response = RedirectResponse(url=url, status_code=status.HTTP_302_FOUND)
     response = clear_tokens_in_cookies(response)
     return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

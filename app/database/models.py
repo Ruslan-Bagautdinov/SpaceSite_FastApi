@@ -1,9 +1,16 @@
+import enum
 from datetime import datetime
 
+from sqlalchemy import Enum
 from sqlalchemy import ForeignKey, Text, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.postgre_db import Base
+
+
+class UserRole(enum.Enum):
+    user = "user"
+    admin = "admin"
 
 
 class User(Base):
@@ -13,6 +20,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(unique=True, index=True)
     email: Mapped[str] = mapped_column(unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(index=True)
+    role: Mapped[UserRole] = mapped_column(Enum(UserRole), default=UserRole.user)
 
     profile: Mapped["UserProfile"] = relationship(back_populates="user", uselist=False, cascade="all, delete-orphan")
     posts: Mapped[list["Post"]] = relationship(back_populates="user", cascade="all, delete-orphan")
