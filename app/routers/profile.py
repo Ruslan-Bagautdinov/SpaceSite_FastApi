@@ -29,10 +29,21 @@ router = APIRouter(tags=['user profile'], prefix='/protected')
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/me")
+@router.get("/me", description="Redirect to the user's profile page.")
 async def get_me(request: Request,
                  db: AsyncSession = Depends(get_session),
                  user: TokenData | None = Depends(check_user)):
+    """
+    Redirect to the user's profile page.
+
+    Args:
+        request (Request): The request object.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        RedirectResponse: Redirect to the user's profile page.
+    """
     user_profile = await get_user_by_username(db, user['username'])
     if user_profile:
         user_id = user_profile.id
@@ -48,12 +59,24 @@ async def get_me(request: Request,
                                            )
 
 
-@router.get("/profile/{user_id}")
+@router.get("/profile/{user_id}", description="Display the user's profile page.")
 async def get_profile(request: Request,
                       user_id: int,
                       db: AsyncSession = Depends(get_session),
                       user: TokenData | None = Depends(check_user)
                       ):
+    """
+    Display the user's profile page.
+
+    Args:
+        request (Request): The request object.
+        user_id (int): The ID of the user whose profile is to be displayed.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        TemplateResponse: The rendered HTML template with the user's profile.
+    """
     top_message = request.session.get('top_message')
     if top_message:
         request.session.pop('top_message', None)
@@ -71,7 +94,7 @@ async def get_profile(request: Request,
         'user_id': result_user.id,
         'username': result_user.username,
         'email': result_user.email,
-        'role': result_user.role
+        'role': result_user.role  # Use role as a string
     }
 
     result_profile = await get_user_profile(db, user_id)
@@ -112,7 +135,7 @@ async def get_profile(request: Request,
                                       )
 
 
-@router.post("/profile/{user_id}/update", response_model=UserProfileUpdate)
+@router.post("/profile/{user_id}/update", response_model=UserProfileUpdate, description="Update the user's profile.")
 async def update_profile(request: Request,
                          user_id: int,
                          first_name: Optional[str] = Form(None),
@@ -124,6 +147,24 @@ async def update_profile(request: Request,
                          db: AsyncSession = Depends(get_session),
                          current_user: TokenData = Depends(check_user)  # Add current_user dependency
                          ):
+    """
+    Update the user's profile.
+
+    Args:
+        request (Request): The request object.
+        user_id (int): The ID of the user whose profile is to be updated.
+        first_name (Optional[str]): The first name of the user.
+        last_name (Optional[str]): The last name of the user.
+        phone_number (Optional[str]): The phone number of the user.
+        user_photo (Optional[UploadFile]): The user's profile photo.
+        user_age (Optional[str]): The age of the user.
+        role (Optional[str]): The role of the user (admin only).
+        db (AsyncSession): The database session.
+        current_user (TokenData): The authenticated user data.
+
+    Returns:
+        RedirectResponse: Redirect to the user's profile page after updating.
+    """
     user = await get_user(db, user_id)
     user_profile = await get_user_profile(db, user_id)
     if not user_profile:
@@ -152,6 +193,7 @@ async def update_profile(request: Request,
     else:
         file_location = previous_photo_path
 
+    # Include role in UserProfileUpdate only if current user is admin
     if current_user['role'] == 'admin':
         user_profile = UserProfileUpdate(first_name=first_name,
                                          last_name=last_name,
@@ -168,11 +210,13 @@ async def update_profile(request: Request,
 
     await update_user_profile(db, user_id, user_profile)
 
+    # Update user role if provided and current user is admin
     if role and current_user['role'] == 'admin':
         user.role = role
         await db.commit()
         await db.refresh(user)
 
+    # Redirect based on the role of the current user
     if current_user['role'] == 'admin':
         endpoint = f"/protected/profile/{user_id}"
     else:
@@ -185,10 +229,22 @@ async def update_profile(request: Request,
                                        endpoint=endpoint)
 
 
-@router.get("/profile/{user_id}/delete", response_class=HTMLResponse)
+@router.get("/profile/{user_id}/delete", response_class=HTMLResponse,
+            description="Display the confirmation page for deleting the user's profile.")
 async def confirm_delete(request: Request,
                          user_id: int,
                          user: TokenData | None = Depends(check_user)):
+    """
+    Display the confirmation page for deleting the user's profile.
+
+    Args:
+        request (Request): The request object.
+        user_id (int): The ID of the user whose profile is to be deleted.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        TemplateResponse: The rendered HTML template for the confirmation page.
+    """
     if user['role'] == 'admin':
         return await delete_user_profile(user_id, request)
     return templates.TemplateResponse("user/confirm_delete.html",
@@ -198,11 +254,23 @@ async def confirm_delete(request: Request,
                                       )
 
 
-@router.post("/profile/{user_id}/delete")
+@router.post("/profile/{user_id}/delete", description="Delete the user's profile.")
 async def delete_user_profile(user_id: int,
                               request: Request,
                               db: AsyncSession = Depends(get_session),
                               user: TokenData | None = Depends(check_user)):
+    """
+    Delete the user's profile.
+
+    Args:
+        user_id (int): The ID of the user whose profile is to be deleted.
+        request (Request): The request object.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        RedirectResponse: Redirect to the root page after deleting the user's profile.
+    """
     user_profile = await get_user_profile(db, user_id)
     previous_photo_path = user_profile.user_photo
 

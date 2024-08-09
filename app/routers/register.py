@@ -21,10 +21,20 @@ router = APIRouter(tags=['user register'])
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get('/register', response_class=HTMLResponse)
+@router.get('/register', response_class=HTMLResponse, description="Display the registration form.")
 async def register_user(request: Request,
                         user: TokenData | None = Depends(check_user)
                         ):
+    """
+    Display the registration form.
+
+    Args:
+        request (Request): The request object.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        TemplateResponse: The rendered HTML template for the registration form.
+    """
     top_message = request.session.get('top_message')
     if top_message:
         request.session.pop('top_message', None)
@@ -37,13 +47,26 @@ async def register_user(request: Request,
                                       )
 
 
-@router.post("/register", response_model=User)
+@router.post("/register", response_model=User, description="Register a new user.")
 async def register_user(request: Request,
                         username: Annotated[str, Form()],
                         email: Annotated[str, Form()],
                         password: Annotated[str, Form()],
                         db: AsyncSession = Depends(get_session)
                         ):
+    """
+    Register a new user.
+
+    Args:
+        request (Request): The request object.
+        username (str): The username of the new user.
+        email (str): The email of the new user.
+        password (str): The password of the new user.
+        db (AsyncSession): The database session.
+
+    Returns:
+        RedirectResponse: Redirect to the root page after successful registration.
+    """
     db_user = await get_user_by_username(db, username=username)
     if db_user:
         return await redirect_with_message(request=request,

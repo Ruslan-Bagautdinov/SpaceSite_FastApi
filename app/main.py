@@ -21,7 +21,37 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    title="SPACE SITE!",
+    description="""
+    **SPACE SITE!** is a FastAPI-based demo site that takes you on a journey through the cosmos. 
+    Explore beautiful space images on the home page, manage user profiles, create and edit posts, 
+    and administer user data with ease. This application showcases the power and flexibility of FastAPI 
+    for building modern web applications.
+
+    ### Key Features:
+    - **Stunning Space Images**: The home page features captivating images of the universe, galaxies, and cosmos, 
+      sourced from Unsplash to provide an immersive experience.
+    - **User Management**: Register, log in, and manage user profiles with personalized information, including 
+      profile pictures and contact details.
+    - **Post Creation and Editing**: Users can create, view, edit, and delete posts, making it easy to share 
+      thoughts and discoveries.
+    - **Admin Dashboard**: Administrators have access to an admin dashboard to manage user data and view 
+      user-specific posts.
+    - **Secure and Scalable**: Built with security and scalability in mind, leveraging FastAPI's robust 
+      middleware and dependency injection systems.
+    - **Two-Role Authentication**: Implements a secure authentication system using JWT (JSON Web Tokens) for 
+      access and refresh tokens, stored in cookies to enhance security and user experience.
+    - **Async Postgres Database**: Utilizes an asynchronous Postgres database for efficient and high-performance 
+      data handling, ensuring smooth operations even under high load.
+
+    Whether you're a space enthusiast, a developer exploring FastAPI, or simply looking for a beautifully 
+    designed web application, SPACE SITE! offers an engaging experience.
+    """,
+    version="1.0.0",
+)
+
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 app.add_middleware(
     CORSMiddleware,

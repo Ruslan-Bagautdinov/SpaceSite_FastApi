@@ -13,12 +13,25 @@ router = APIRouter(tags=['root'])
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get('/')
+@router.get('/', description="Display the root page with paginated posts.")
 async def root(request: Request,
                db: AsyncSession = Depends(get_session),
                user: TokenData | None = Depends(check_user),
                page: int = Query(1, description="Page number"),
                page_size: int = Query(21, description="Number of posts per page")):
+    """
+    Display the root page with paginated posts.
+
+    Args:
+        request (Request): The request object.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+        page (int): The page number for pagination.
+        page_size (int): The number of posts per page.
+
+    Returns:
+        TemplateResponse: The rendered HTML template with the root page content.
+    """
     skip = (page - 1) * page_size
     limit = page_size
 

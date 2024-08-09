@@ -26,12 +26,25 @@ async def handle_top_message(request: Request):
     return top_message
 
 
-@router.get('/posts/all')
+@router.get('/posts/all', description="Retrieve all posts for the authenticated user.")
 async def my_posts(request: Request,
                    db: AsyncSession = Depends(get_session),
                    user: TokenData = Depends(check_user),
                    page: int = Query(1, description="Page number"),
                    page_size: int = Query(21, description="Number of posts per page")):
+    """
+    Retrieve all posts for the authenticated user.
+
+    Args:
+        request (Request): The request object.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+        page (int): The page number for pagination.
+        page_size (int): The number of posts per page.
+
+    Returns:
+        TemplateResponse: The rendered HTML template with the user's posts.
+    """
     username = user['username']
     user_obj = await get_user_by_username(db, username)
     if user_obj is None:
@@ -60,9 +73,21 @@ async def my_posts(request: Request,
     })
 
 
-@router.get('/posts/view/{post_id}')
+@router.get('/posts/view/{post_id}', description="View a specific post by ID.")
 async def view_post(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                     user: TokenData = Depends(check_user)):
+    """
+    View a specific post by ID.
+
+    Args:
+        request (Request): The request object.
+        post_id (int): The ID of the post to view.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        TemplateResponse: The rendered HTML template with the post details.
+    """
     post = await get_post_by_id(db, post_id)
     if not post:
         return await redirect_with_message(request=request,
@@ -79,8 +104,18 @@ async def view_post(request: Request, post_id: int, db: AsyncSession = Depends(g
     })
 
 
-@router.get('/posts/new')
+@router.get('/posts/new', description="Display the form to create a new post.")
 async def create_post_form(request: Request, user: TokenData = Depends(check_user)):
+    """
+    Display the form to create a new post.
+
+    Args:
+        request (Request): The request object.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        TemplateResponse: The rendered HTML template for the new post form.
+    """
     top_message = await handle_top_message(request)
     return templates.TemplateResponse("user/create_post.html", {
         "request": request,
@@ -89,9 +124,20 @@ async def create_post_form(request: Request, user: TokenData = Depends(check_use
     })
 
 
-@router.post('/posts/new')
+@router.post('/posts/new', description="Create a new post.")
 async def create_post_route(request: Request, db: AsyncSession = Depends(get_session),
                             user: TokenData = Depends(check_user)):
+    """
+    Create a new post.
+
+    Args:
+        request (Request): The request object.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        RedirectResponse: Redirect to the posts list after creating the post.
+    """
     form = await request.form()
     content = form.get("content")
     if not content:
@@ -117,9 +163,21 @@ async def create_post_route(request: Request, db: AsyncSession = Depends(get_ses
                                        endpoint="/posts/all")
 
 
-@router.get('/posts/edit/{post_id}')
+@router.get('/posts/edit/{post_id}', description="Display the form to edit a post.")
 async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                          user: TokenData = Depends(check_user)):
+    """
+    Display the form to edit a post.
+
+    Args:
+        request (Request): The request object.
+        post_id (int): The ID of the post to edit.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        TemplateResponse: The rendered HTML template for the edit post form.
+    """
     post = await get_post_by_id(db, post_id)
     if not post:
         return await redirect_with_message(request=request,
@@ -151,9 +209,21 @@ async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depe
     })
 
 
-@router.post('/posts/edit/{post_id}')
+@router.post('/posts/edit/{post_id}', description="Update a post.")
 async def edit_post_route(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                           user: TokenData = Depends(check_user)):
+    """
+    Update a post.
+
+    Args:
+        request (Request): The request object.
+        post_id (int): The ID of the post to update.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        RedirectResponse: Redirect to the posts list after updating the post.
+    """
     post = await get_post_by_id(db, post_id)
     if not post:
         return await redirect_with_message(request=request,
@@ -192,9 +262,21 @@ async def edit_post_route(request: Request, post_id: int, db: AsyncSession = Dep
                                        endpoint="/posts/all")
 
 
-@router.post('/posts/delete/{post_id}')
+@router.post('/posts/delete/{post_id}', description="Delete a post.")
 async def delete_post_route(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                             user: TokenData = Depends(check_user)):
+    """
+    Delete a post.
+
+    Args:
+        request (Request): The request object.
+        post_id (int): The ID of the post to delete.
+        db (AsyncSession): The database session.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        RedirectResponse: Redirect to the posts list after deleting the post.
+    """
     post = await get_post_by_id(db, post_id)
     if not post:
         return await redirect_with_message(request=request,

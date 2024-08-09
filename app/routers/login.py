@@ -21,9 +21,19 @@ router = APIRouter(tags=['user login'])
 templates = Jinja2Templates(directory="templates")
 
 
-@router.get("/login", response_class=HTMLResponse)
+@router.get("/login", response_class=HTMLResponse, description="Display the login form.")
 async def get_login(request: Request,
                     user: TokenData | None = Depends(check_user)):
+    """
+    Display the login form.
+
+    Args:
+        request (Request): The request object.
+        user (TokenData): The authenticated user data.
+
+    Returns:
+        TemplateResponse: The rendered HTML template for the login form.
+    """
     top_message = request.session.get('top_message')
     if top_message:
         request.session.pop('top_message', None)
@@ -36,11 +46,22 @@ async def get_login(request: Request,
                                       )
 
 
-@router.post("/login")
+@router.post("/login", description="Authenticate user and redirect to the root page.")
 async def login_for_access_token(request: Request,
                                  form_data: OAuth2PasswordRequestForm = Depends(),
                                  db: AsyncSession = Depends(get_session)
                                  ):
+    """
+    Authenticate user and redirect to the root page.
+
+    Args:
+        request (Request): The request object.
+        form_data (OAuth2PasswordRequestForm): The form data containing username and password.
+        db (AsyncSession): The database session.
+
+    Returns:
+        RedirectResponse: Redirect to the root page after successful authentication.
+    """
     user = await authenticate_user(db, form_data.username, form_data.password)
     if not user:
         return await redirect_with_message(request=request,
@@ -52,8 +73,17 @@ async def login_for_access_token(request: Request,
     return await authenticated_root_redirect(request, user.username, user.role)  # Pass role as string
 
 
-@router.get("/logout")
+@router.get("/logout", description="Logout the user and redirect to the login page.")
 async def logout_user(login: bool = False):
+    """
+    Logout the user and redirect to the login page.
+
+    Args:
+        login (bool): Flag to determine if the user should be redirected to the login page.
+
+    Returns:
+        RedirectResponse: Redirect to the login page after logout.
+    """
     if login:
         url = "/login"
     else:
