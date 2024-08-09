@@ -26,7 +26,7 @@ async def handle_top_message(request: Request):
     return top_message
 
 
-@router.get('/posts')
+@router.get('/posts/all')
 async def my_posts(request: Request,
                    db: AsyncSession = Depends(get_session),
                    user: TokenData = Depends(check_user),
@@ -60,7 +60,7 @@ async def my_posts(request: Request,
     })
 
 
-@router.get('/posts/{post_id}')
+@router.get('/posts/view/{post_id}')
 async def view_post(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                     user: TokenData = Depends(check_user)):
     post = await get_post_by_id(db, post_id)
@@ -79,7 +79,7 @@ async def view_post(request: Request, post_id: int, db: AsyncSession = Depends(g
     })
 
 
-@router.get('/posts/create')
+@router.get('/posts/new')
 async def create_post_form(request: Request, user: TokenData = Depends(check_user)):
     top_message = await handle_top_message(request)
     return templates.TemplateResponse("user/create_post.html", {
@@ -89,7 +89,7 @@ async def create_post_form(request: Request, user: TokenData = Depends(check_use
     })
 
 
-@router.post('/posts/create')
+@router.post('/posts/new')
 async def create_post_route(request: Request, db: AsyncSession = Depends(get_session),
                             user: TokenData = Depends(check_user)):
     form = await request.form()
@@ -99,7 +99,7 @@ async def create_post_route(request: Request, db: AsyncSession = Depends(get_ses
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="Content is required",
-                                           endpoint="/posts/create")
+                                           endpoint="/posts/new")
     username = user['username']
     user_obj = await get_user_by_username(db, username)
     if user_obj is None:
@@ -114,10 +114,10 @@ async def create_post_route(request: Request, db: AsyncSession = Depends(get_ses
                                        message_class=OK_CLASS,
                                        message_icon=OK_ICON,
                                        message_text="Post created successfully",
-                                       endpoint="/posts")
+                                       endpoint="/posts/all")
 
 
-@router.get('/posts/{post_id}/edit')
+@router.get('/posts/edit/{post_id}')
 async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                          user: TokenData = Depends(check_user)):
     post = await get_post_by_id(db, post_id)
@@ -126,7 +126,7 @@ async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depe
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="Post not found",
-                                           endpoint="/posts")
+                                           endpoint="/posts/all")
     username = user['username']
     user_obj = await get_user_by_username(db, username)
     if user_obj is None:
@@ -141,7 +141,7 @@ async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depe
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="You do not have permission to edit this post",
-                                           endpoint="/posts")
+                                           endpoint="/posts/all")
     top_message = await handle_top_message(request)
     return templates.TemplateResponse("user/edit_post.html", {
         "request": request,
@@ -151,7 +151,7 @@ async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depe
     })
 
 
-@router.post('/posts/{post_id}/edit')
+@router.post('/posts/edit/{post_id}')
 async def edit_post_route(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                           user: TokenData = Depends(check_user)):
     post = await get_post_by_id(db, post_id)
@@ -160,7 +160,7 @@ async def edit_post_route(request: Request, post_id: int, db: AsyncSession = Dep
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="Post not found",
-                                           endpoint="/posts")
+                                           endpoint="/posts/all")
     username = user['username']
     user_obj = await get_user_by_username(db, username)
     if user_obj is None:
@@ -175,7 +175,7 @@ async def edit_post_route(request: Request, post_id: int, db: AsyncSession = Dep
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="You do not have permission to edit this post",
-                                           endpoint="/posts")
+                                           endpoint="/posts/all")
     form = await request.form()
     content = form.get("content")
     if not content:
@@ -183,16 +183,16 @@ async def edit_post_route(request: Request, post_id: int, db: AsyncSession = Dep
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="Content is required",
-                                           endpoint=f"/posts/{post_id}/edit")
+                                           endpoint=f"/posts/edit/{post_id}")
     post = await update_post(db, post_id, content)
     return await redirect_with_message(request=request,
                                        message_class=OK_CLASS,
                                        message_icon=OK_ICON,
                                        message_text="Post updated successfully",
-                                       endpoint="/posts")
+                                       endpoint="/posts/all")
 
 
-@router.post('/posts/{post_id}/delete')
+@router.post('/posts/delete/{post_id}')
 async def delete_post_route(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
                             user: TokenData = Depends(check_user)):
     post = await get_post_by_id(db, post_id)
@@ -201,7 +201,7 @@ async def delete_post_route(request: Request, post_id: int, db: AsyncSession = D
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="Post not found",
-                                           endpoint="/posts")
+                                           endpoint="/posts/all")
     username = user['username']
     user_obj = await get_user_by_username(db, username)
     if user_obj is None:
@@ -216,10 +216,10 @@ async def delete_post_route(request: Request, post_id: int, db: AsyncSession = D
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text="You do not have permission to delete this post",
-                                           endpoint="/posts")
+                                           endpoint="/posts/all")
     await delete_post(db, post_id)
     return await redirect_with_message(request=request,
                                        message_class=OK_CLASS,
                                        message_icon=OK_ICON,
                                        message_text="Post deleted successfully",
-                                       endpoint="/posts")
+                                       endpoint="/posts/all")

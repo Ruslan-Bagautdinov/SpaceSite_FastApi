@@ -17,7 +17,7 @@
             {% for post in posts %}
                 <li style="margin-bottom: 10px;">
                     <div style="border: 1px solid #ccc; border-radius: 10px; padding: 10px; background-color: #fff;">
-                        <a href="/posts/{{ post.id }}/edit" class="post-link">
+                        <a href="/posts/edit/{{ post.id }}" class="post-link">
                             {{ post.truncated_content() }}
                         </a>
                     </div>

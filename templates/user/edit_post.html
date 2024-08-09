@@ -16,13 +16,13 @@
 {% block page_content %}
 <div class="container">
     <h1>Edit Post</h1>
-    <form action="/posts/{{ post.id }}/edit" method="post">
+    <form action="/posts/edit/{{ post.id }}" method="post">
         <div class="form-group">
             <label for="content">Content</label>
             <textarea class="form-control" id="content" name="content" rows="10" required>{{ post.content }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Update Post</button>
-        <a href="/posts" class="btn btn-secondary">Cancel</a>
+        <a href="/posts/all" class="btn btn-secondary">Cancel</a>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             Delete Post
@@ -42,7 +42,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <form action="/posts/{{ post.id }}/delete" method="post">
+                    <form action="/posts/delete/{{ post.id }}" method="post">
                         <button type="submit" class="btn btn-danger">Yes</button>
                     </form>
                 </div>

@@ -16,23 +16,24 @@ import random
 import os
 
 
-from app.config import UNSPLASH_ACCESS_KEY, BASE_DIR, SYNC_DATABASE_URL
+from app.config import UNSPLASH_ACCESS_KEY
 
+# from app.config import BASE_DIR, SYNC_DATABASE_URL
 
-def perform_migrations():
-    alembic_dir = os.path.join(BASE_DIR, 'alembic')
-
-    alembic_ini_path = os.path.join(BASE_DIR, 'alembic.ini')
-
-    alembic_cfg = Config(alembic_ini_path)
-
-    alembic_cfg.set_main_option('script_location', alembic_dir)
-
-    alembic_cfg.set_main_option('sqlalchemy.url', SYNC_DATABASE_URL)
-
-    logger.info("Running Alembic migrations...")
-    command.upgrade(alembic_cfg, "head")
-    logger.info("Migrations completed successfully.")
+# def perform_migrations():
+#     alembic_dir = os.path.join(BASE_DIR, 'alembic')
+#
+#     alembic_ini_path = os.path.join(BASE_DIR, 'alembic.ini')
+#
+#     alembic_cfg = Config(alembic_ini_path)
+#
+#     alembic_cfg.set_main_option('script_location', alembic_dir)
+#
+#     alembic_cfg.set_main_option('sqlalchemy.url', SYNC_DATABASE_URL)
+#
+#     logger.info("Running Alembic migrations...")
+#     command.upgrade(alembic_cfg, "head")
+#     logger.info("Migrations completed successfully.")
 
 
 async def save_upload_file(upload_file: UploadFile, destination: str):

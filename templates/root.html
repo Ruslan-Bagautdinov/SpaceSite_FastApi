@@ -21,7 +21,7 @@
                     <div class="row no-gutters">
                         {% for post in posts %}
                         <div class="col-12 col-md-6 col-lg-4 mb-3">
-                            <a href="/posts/{{ post.id }}" class="single-post" style="display: block; margin: 0; padding: 10px; background: rgba(0, 0, 0, 0.25); border-radius: 10px; border: 1px solid #ccc; color: #fff; box-sizing: border-box; text-decoration: none;">
+                            <a href="/posts/view/{{ post.id }}" class="single-post" style="display: block; margin: 0; padding: 10px; background: rgba(0, 0, 0, 0.25); border-radius: 10px; border: 1px solid #ccc; color: #fff; box-sizing: border-box; text-decoration: none;">
                                 <p class="post-content" style="font-size: 0.75em; margin-bottom: 0.25rem;">{{ post.truncated_content() }}</p>
                                 <p class="post-meta" style="font-size: 0.75em; margin-bottom: 0.25rem;"><small style="color: #ddd;">By {{ post.user.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
                             </a>

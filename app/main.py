@@ -14,7 +14,6 @@ from app.routers.posts import router as posts_router
 from app.routers.profile import router as profile_router
 from app.routers.register import router as register_router
 from app.routers.root import router as root_router
-from app.tools.functions import perform_migrations
 
 
 @asynccontextmanager

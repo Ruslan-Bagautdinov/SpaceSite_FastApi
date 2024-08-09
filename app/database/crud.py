@@ -33,7 +33,7 @@ async def create_user(db: AsyncSession, user: UserCreate):
     db_user = User(username=user.username,
                    hashed_password=hashed_password,
                    email=user.email,
-                   role="user")  # Assign the "user" role here as a string
+                   role="user")
     db.add(db_user)
     await db.flush()
     db_user_profile = UserProfile(user_id=db_user.id)

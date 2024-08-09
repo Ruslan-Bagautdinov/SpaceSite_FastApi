@@ -8,7 +8,7 @@ Create Date: 2024-08-09 17:10:16.173370
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
-from app.database.models import Base, User, UserProfile
+from app.database.models import Base, User, UserProfile, Post
 
 
 # revision identifiers, used by Alembic.

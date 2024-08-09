@@ -12,13 +12,13 @@
 {% block page_content %}
 <div class="container">
     <h1>Create Post</h1>
-    <form action="/posts/create" method="post">
+    <form action="/posts/new" method="post">
         <div class="form-group">
             <label for="content">Content</label>
             <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Create Post</button>
-        <a href="/posts" class="btn btn-secondary">Cancel</a>
+        <a href="/posts/all" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 {% endblock %}

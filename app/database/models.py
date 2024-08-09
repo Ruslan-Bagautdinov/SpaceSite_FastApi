@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from sqlalchemy import ForeignKey, Text, DateTime
@@ -46,21 +45,3 @@ class Post(Base):
 
     def truncated_content(self):
         return self.content[:250] + '...' if len(self.content) > 250 else self.content
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
