@@ -4,83 +4,40 @@ from fastapi import (UploadFile,
                      )
 from fastapi.responses import RedirectResponse
 
-from datetime import datetime
-from time import sleep
 from PIL import Image
+from alembic import command
+from alembic.config import Config
+from loguru import logger
 import tempfile
-import subprocess
 import aiofiles
 import base64
 import httpx
 import random
 import os
 
-from app.config import UNSPLASH_ACCESS_KEY, BASE_DIR
+
+from app.config import UNSPLASH_ACCESS_KEY, BASE_DIR, SYNC_DATABASE_URL
 
 
 def perform_migrations():
+    alembic_dir = os.path.join(BASE_DIR, 'alembic')
 
-    alembic_path = os.path.join(BASE_DIR, 'alembic')
-    if os.path.exists(alembic_path):
-        print("Alembic directory found")
-    else:
-        sleep(15)
-        command = ['alembic', 'init', '-t', 'async', 'alembic']
-        subprocess.run(command)
-        print('Alembic initialized')
+    alembic_ini_path = os.path.join(BASE_DIR, 'alembic.ini')
 
-    version_path = os.path.join(BASE_DIR, 'alembic', 'versions')
-    if os.listdir(version_path):
-        print("Versions directory not empty")
-    else:
-        print("Versions directory empty")
-        sleep(20)
-        now = datetime.now().strftime("%Y-%m-%d %H:%M")
-        print('Alembic revision started...')
-        subprocess.run(['alembic', 'revision', '--autogenerate', '-m', now])
-        print('Alembic revision finished')
-        sleep(10)
-        print('Alembic migration started...')
-        subprocess.run(['alembic', 'upgrade', 'head'])
-        print('Alembic migration finished')
+    alembic_cfg = Config(alembic_ini_path)
 
+    alembic_cfg.set_main_option('script_location', alembic_dir)
 
-# def resize_image(input_image_path, size_limit):
-#     with Image.open(input_image_path) as img:
-#         if max(img.size) > size_limit:
-#             aspect_ratio = min(size_limit / img.size[0], size_limit / img.size[1])
-#             new_size = (int(img.size[0] * aspect_ratio), int(img.size[1] * aspect_ratio))
-#             img = img.resize(new_size, Image.Resampling.LANCZOS)
-#         return img  # Always return the image object
+    alembic_cfg.set_main_option('sqlalchemy.url', SYNC_DATABASE_URL)
 
-
-# async def save_upload_file(upload_file: UploadFile, destination: str):
-#     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-#         temp_filename = temp_file.name
-#         async with aiofiles.open(temp_filename, 'wb') as out_file:
-#             while content := await upload_file.read(1024):  # Read file in chunks
-#                 await out_file.write(content)
-#
-#     # resized_image = resize_image(temp_filename, 1024)
-#     # if resized_image is not None:  # Check if the image needs to be resized
-#     #     resized_image.save(destination)
-#     #     resized_image.close()
-#     # else:
-#         with Image.open(temp_filename) as img:
-#             img.save(destination)
-#             img.close()  # Save and close the original image
-#     os.unlink(temp_filename)
-
-
-# async def save_upload_file(upload_file: UploadFile, destination: str):
-#     async with aiofiles.open(destination, 'wb') as out_file:
-#         while content := await upload_file.read(1024):  # Read file in chunks
-#             await out_file.write(content)
+    logger.info("Running Alembic migrations...")
+    command.upgrade(alembic_cfg, "head")
+    logger.info("Migrations completed successfully.")
 
 
 async def save_upload_file(upload_file: UploadFile, destination: str):
     if upload_file is None:
-        print("No file provided.")
+        logger.debug("No file provided.")
         return
 
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -110,10 +67,10 @@ async def read_and_encode_photo(photo_path):
             photo_base64 = base64.b64encode(photo_data).decode('utf-8')
             return photo_base64
     except FileNotFoundError:
-        print(f"File not found: {photo_path}")
+        logger.debug(f"File not found: {photo_path}")
         return None
     except Exception as e:
-        print(f"Error encoding photo {photo_path}: {e}")
+        logger.debug(f"Error encoding photo {photo_path}: {e}")
         return None
 
 
@@ -140,10 +97,10 @@ async def load_unsplash_photo(query: str = "cosmos") -> str | None:
             else:
                 image_url = None
         except httpx.HTTPStatusError as errh:
-            print("HTTP error occurred:", errh)
+            logger.debug("HTTP error occurred:", errh)
             image_url = None
         except httpx.RequestError as err:
-            print("An error occurred:", err)
+            logger.debug("An error occurred:", err)
             image_url = None
 
     return image_url

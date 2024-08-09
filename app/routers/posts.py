@@ -60,6 +60,25 @@ async def my_posts(request: Request,
     })
 
 
+@router.get('/posts/{post_id}')
+async def view_post(request: Request, post_id: int, db: AsyncSession = Depends(get_session),
+                    user: TokenData = Depends(check_user)):
+    post = await get_post_by_id(db, post_id)
+    if not post:
+        return await redirect_with_message(request=request,
+                                           message_class=WARNING_CLASS,
+                                           message_icon=WARNING_ICON,
+                                           message_text="Post not found",
+                                           endpoint="/")
+    top_message = await handle_top_message(request)
+    return templates.TemplateResponse("user/view_post.html", {
+        "request": request,
+        "post": post,
+        "user": user,
+        "top_message": top_message
+    })
+
+
 @router.get('/posts/create')
 async def create_post_form(request: Request, user: TokenData = Depends(check_user)):
     top_message = await handle_top_message(request)

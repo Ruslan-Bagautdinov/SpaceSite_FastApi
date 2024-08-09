@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter, Depends, Request, Query
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -52,3 +53,11 @@ async def root(request: Request,
         "total_pages": total_pages,
         "page_size": page_size
     })
+
+
+
+
+
+
+
+

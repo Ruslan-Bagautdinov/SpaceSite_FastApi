@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %} Post by {{ post.user.username }} {% endblock %}
+{% block head %} 
+    {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h1>Post by {{ post.user.username }}</h1>
+    <div class="post-content">
+        {{ post.content }}
+    </div>
+    <a href="/" class="btn btn-primary">Back to Home</a>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     {% block head %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,9 +19,9 @@
       rel="stylesheet"
     />
     {% endblock %}
-  </head>
+</head>
 
-  <body>
+<body>
     <!-- Navbar -->
     {% include 'include/navbar.html' %}
 
@@ -73,50 +73,50 @@
     {% block scripts %}
     <!-- Light and Dark theme -->
     <script>
-// Add event listeners to the navbar buttons
-      document.querySelectorAll('.theme-toggle').forEach(function(toggle) {
-        toggle.addEventListener('click', function(e) {
-          e.preventDefault();
-          var theme = this.dataset.theme;
-          var navbar = document.getElementById('my_navbar');
+        // Add event listeners to the navbar buttons
+        document.querySelectorAll('.theme-toggle').forEach(function(toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                var theme = this.dataset.theme;
+                var navbar = document.getElementById('my_navbar');
 
-          // Remove existing theme classes from body and navbar
-          document.body.classList.remove('light-theme', 'dark-theme');
-          navbar.classList.remove('navbar-light', 'navbar-dark', 'bg-light', 'bg-dark');
+                // Remove existing theme classes from body and navbar
+                document.body.classList.remove('light-theme', 'dark-theme');
+                navbar.classList.remove('navbar-light', 'navbar-dark', 'bg-light', 'bg-dark');
 
-          // Add new theme classes to body and navbar
-          document.body.classList.add(theme + '-theme');
-          navbar.classList.add('navbar-' + theme, 'bg-' + theme);
+                // Add new theme classes to body and navbar
+                document.body.classList.add(theme + '-theme');
+                navbar.classList.add('navbar-' + theme, 'bg-' + theme);
 
-          // Save the selected theme to localStorage
-          localStorage.setItem('theme', theme);
+                // Save the selected theme to localStorage
+                localStorage.setItem('theme', theme);
 
-          // Remove 'active' class from all buttons
-          document.querySelectorAll('.theme-toggle').forEach(function(btn) {
-            btn.classList.remove('active');
-          });
+                // Remove 'active' class from all buttons
+                document.querySelectorAll('.theme-toggle').forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
 
-          // Add 'active' class to the clicked button
-          this.classList.add('active');
+                // Add 'active' class to the clicked button
+                this.classList.add('active');
+            });
         });
-      });
 
-      // Check if a theme preference is saved in localStorage
-      var currentTheme = localStorage.getItem('theme');
-      if (currentTheme) {
-        var navbar = document.getElementById('my_navbar');
-        document.body.classList.add(currentTheme + '-theme');
-        navbar.classList.add('navbar-' + currentTheme, 'bg-' + currentTheme);
-        // Set the active button based on the saved theme
-        document.querySelector(`.theme-toggle[data-theme="${currentTheme}"]`).classList.add('active');
-      } else {
-        // If no preference is saved, default to light theme
-        document.body.classList.add('light-theme');
-        var navbar = document.getElementById('my_navbar'); // Define navbar here
-        navbar.classList.add('navbar-light', 'bg-light');
-        // Set the active button to light theme
-        document.querySelector('.theme-toggle[data-theme="light"]').classList.add('active');
-      }
+        // Check if a theme preference is saved in localStorage
+        var currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            var navbar = document.getElementById('my_navbar');
+            document.body.classList.add(currentTheme + '-theme');
+            navbar.classList.add('navbar-' + currentTheme, 'bg-' + currentTheme);
+            // Set the active button based on the saved theme
+            document.querySelector(`.theme-toggle[data-theme="${currentTheme}"]`).classList.add('active');
+        } else {
+            // If no preference is saved, default to light theme
+            document.body.classList.add('light-theme');
+            var navbar = document.getElementById('my_navbar'); // Define navbar here
+            navbar.classList.add('navbar-light', 'bg-light');
+            // Set the active button to light theme
+            document.querySelector('.theme-toggle[data-theme="light"]').classList.add('active');
+        }
     </script>
 
     <script
@@ -125,5 +125,5 @@
       crossorigin="anonymous"
     ></script>
     {% endblock %}
-  </body>
+</body>
 </html>

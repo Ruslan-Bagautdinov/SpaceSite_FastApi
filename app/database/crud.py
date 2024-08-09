@@ -127,9 +127,9 @@ async def create_post(db: AsyncSession, content: str, user_id: int):
 
 
 async def get_post_by_id(db: AsyncSession, post_id: int):
-    query = select(Post).filter(Post.id == post_id)
+    query = select(Post).where(Post.id == post_id).options(selectinload(Post.user))
     result = await db.execute(query)
-    return result.scalars().first()
+    return result.scalar_one_or_none()
 
 
 async def update_post(db: AsyncSession, post_id: int, content: str):

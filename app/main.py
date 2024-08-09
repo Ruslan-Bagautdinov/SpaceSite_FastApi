@@ -1,28 +1,26 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
-from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from contextlib import asynccontextmanager
-
 from alembic.config import Config
 
-from app.routers.root import router as root_router
-from app.routers.register import router as register_router
-from app.routers.login import router as login_router
-from app.routers.profile import router as profile_router
-from app.routers.posts import router as posts_router
-from app.routers.admin import router as admin_router
 from app.auth.middleware import check_access_token
+from app.config import SECRET_KEY, BASE_DIR, DATABASE_URL
+from app.routers.admin import router as admin_router
+from app.routers.login import router as login_router
+from app.routers.posts import router as posts_router
+from app.routers.profile import router as profile_router
+from app.routers.register import router as register_router
+from app.routers.root import router as root_router
 from app.tools.functions import perform_migrations
 
-from app.config import SECRET_KEY, BASE_DIR, DATABASE_URL
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    perform_migrations()
     yield
+
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
