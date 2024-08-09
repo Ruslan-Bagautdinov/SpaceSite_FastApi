@@ -1,11 +1,11 @@
 /* mystyle.css */
 
-/* General body styles for light and dark themes */
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-x: hidden;
 }
 
 body.light-theme {
@@ -77,7 +77,7 @@ body.light-theme .custom-navbar .navbar-toggler {
 }
 
 body.light-theme .custom-navbar .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* Set the color of the toggler icon */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 .theme-toggle.active {
@@ -103,5 +103,5 @@ body.light-theme .custom-navbar .navbar-toggler-icon {
     justify-content: space-around;
     align-content: flex-start;
     flex-grow: 1;
-    overflow-y: hidden; /* Add scroll if posts overflow */
+    overflow-y: hidden;
 }
