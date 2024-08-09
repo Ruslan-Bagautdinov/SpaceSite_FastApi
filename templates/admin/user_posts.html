@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} My Posts {% endblock %}
+{% block title %} Admin - User Posts {% endblock %}
 {% block head %}
     {{ super() }}
     <style>
@@ -12,7 +12,7 @@
 
 {% block page_content %}
     <div class="container">
-        <h2>My Posts</h2>
+        <h2>User Posts</h2>
         <ul style="list-style-type: none; padding: 0;">
             {% for post in posts %}
                 <li style="margin-bottom: 10px;">

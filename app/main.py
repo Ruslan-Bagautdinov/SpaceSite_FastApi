@@ -13,6 +13,7 @@ from app.routers.register import router as register_router
 from app.routers.login import router as login_router
 from app.routers.profile import router as profile_router
 from app.routers.posts import router as posts_router
+from app.routers.admin import router as admin_router
 from app.auth.middleware import check_access_token
 from app.tools.functions import perform_migrations
 
@@ -45,3 +46,4 @@ app.include_router(register_router)
 app.include_router(login_router)
 app.include_router(profile_router)
 app.include_router(posts_router)
+app.include_router(admin_router)

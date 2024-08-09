@@ -52,7 +52,7 @@ async def register_user(request: Request,
                                            message_text=f"Username {username} is already registered!",
                                            endpoint="/register"
                                            )
-    user = UserCreate(username=username, email=email, password=password)
+    user = UserCreate(username=username, email=email, password=password, role="user")  # Include role here
     await create_user(db=db, user=user)
     new_top_message = {
         "class": "alert alert-info rounded",

@@ -13,7 +13,6 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.middleware import check_user
-from app.database.models import UserRole
 from app.auth.schemas import TokenData, UserProfileUpdate
 from app.config import IMAGE_DIR
 from app.database.crud import (get_user,
@@ -72,7 +71,7 @@ async def get_profile(request: Request,
         'user_id': result_user.id,
         'username': result_user.username,
         'email': result_user.email,
-        'role': result_user.role.value  # Add role to profile
+        'role': result_user.role  # Use role as a string
     }
 
     result_profile = await get_user_profile(db, user_id)
@@ -153,17 +152,26 @@ async def update_profile(request: Request,
     else:
         file_location = previous_photo_path
 
-    user_profile = UserProfileUpdate(first_name=first_name,
-                                     last_name=last_name,
-                                     phone_number=phone_number,
-                                     user_photo=file_location,
-                                     user_age=user_age)
+    # Include role in UserProfileUpdate only if current user is admin
+    if current_user['role'] == 'admin':
+        user_profile = UserProfileUpdate(first_name=first_name,
+                                         last_name=last_name,
+                                         phone_number=phone_number,
+                                         user_photo=file_location,
+                                         user_age=user_age,
+                                         role=role)
+    else:
+        user_profile = UserProfileUpdate(first_name=first_name,
+                                         last_name=last_name,
+                                         phone_number=phone_number,
+                                         user_photo=file_location,
+                                         user_age=user_age)
 
     await update_user_profile(db, user_id, user_profile)
 
-    # Update user role if provided
-    if role:
-        user.role = UserRole[role]
+    # Update user role if provided and current user is admin
+    if role and current_user['role'] == 'admin':
+        user.role = role
         await db.commit()
         await db.refresh(user)
 

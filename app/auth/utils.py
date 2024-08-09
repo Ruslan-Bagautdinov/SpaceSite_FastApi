@@ -32,10 +32,10 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def create_token(user_name: str, role: str, token_type: str, expire_delta: int):
+def create_token(username: str, role: str, token_type: str, expire_delta: int):
     expire = datetime.utcnow() + timedelta(minutes=expire_delta)
     data = {
-        "user_name": user_name,
+        "username": username,
         "role": role,
         "exp": expire,
         "Expires": expire.strftime("%a, %d %b %Y %H:%M:%S GMT"),
@@ -47,17 +47,16 @@ def create_token(user_name: str, role: str, token_type: str, expire_delta: int):
     return encoded_token
 
 
-def create_access_token(user_name: str, role: str):
-    return create_token(user_name, role, "access_token", ACCESS_TOKEN_EXPIRE_MINUTES)
+def create_access_token(username: str, role: str):
+    return create_token(username, role, "access_token", ACCESS_TOKEN_EXPIRE_MINUTES)
 
 
-def create_refresh_token(user_name: str, role: str):
-    return create_token(user_name, role, "refresh_token", REFRESH_TOKEN_EXPIRE_MINUTES)
+def create_refresh_token(username: str, role: str):
+    return create_token(username, role, "refresh_token", REFRESH_TOKEN_EXPIRE_MINUTES)
 
 
 def decode_token(token):
     token = token.replace("Bearer ", "")
-    # token = b64decode(token).decode('utf-8') # use with PyJWT==1.7.1
     return decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
 
@@ -65,7 +64,7 @@ def verify_token(token: str, token_type: str):
     try:
         payload = decode_token(token)
         if payload['type'] == token_type:
-            return payload['user_name'], payload['role']
+            return payload['username'], payload['role']
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token type")
     except ExpiredSignatureError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
@@ -77,8 +76,9 @@ def refresh_access_token(refresh_token: str):
     try:
         payload = decode_token(refresh_token)
         if payload['type'] == 'refresh_token':
-            user_name = payload['user_name']
-            new_access_token = create_access_token(user_name)
+            username = payload['username']
+            role = payload['role']
+            new_access_token = create_access_token(username, role)
             return new_access_token
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token type")
     except ExpiredSignatureError:

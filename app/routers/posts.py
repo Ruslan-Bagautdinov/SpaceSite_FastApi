@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Query
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.middleware import check_user
 from app.auth.schemas import TokenData
 from app.database.crud import (get_user_by_username,
-                               get_posts_by_user,
+                               get_paginated_posts_by_user,
+                               get_total_posts_count_by_user,
                                create_post,
                                get_post_by_id,
                                update_post,
@@ -26,7 +27,11 @@ async def handle_top_message(request: Request):
 
 
 @router.get('/posts')
-async def my_posts(request: Request, db: AsyncSession = Depends(get_session), user: TokenData = Depends(check_user)):
+async def my_posts(request: Request,
+                   db: AsyncSession = Depends(get_session),
+                   user: TokenData = Depends(check_user),
+                   page: int = Query(1, description="Page number"),
+                   page_size: int = Query(21, description="Number of posts per page")):
     username = user['username']
     user_obj = await get_user_by_username(db, username)
     if user_obj is None:
@@ -36,13 +41,22 @@ async def my_posts(request: Request, db: AsyncSession = Depends(get_session), us
                                            message_text="User not found",
                                            endpoint="/")
     user_id = user_obj.id
-    posts = await get_posts_by_user(db, user_id)
+    skip = (page - 1) * page_size
+    limit = page_size
+
+    posts = await get_paginated_posts_by_user(db, user_id, skip=skip, limit=limit)
+    total_posts = await get_total_posts_count_by_user(db, user_id)
+    total_pages = (total_posts + page_size - 1) // page_size
+
     top_message = await handle_top_message(request)
     return templates.TemplateResponse("user/my_posts.html", {
         "request": request,
         "posts": posts,
         "user": user,
-        "top_message": top_message
+        "top_message": top_message,
+        "page": page,
+        "total_pages": total_pages,
+        "page_size": page_size
     })
 
 

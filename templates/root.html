@@ -1,25 +1,32 @@
 {% extends "base.html" %}
 {% block title %} Home page {% endblock %}
-{% block head %} {{ super() }} {% endblock %}
+{% block head %} 
+    {{ super() }}
+    <style>
+        .image-container {
+            background-image: url('{{ unsplash_photo }}');
+        }
+    </style>
+{% endblock %}
 
 {% block unsplash_content %}
-<div class="container-fluid">
-    <div class="row">
+<div class="container-fluid p-0">
+    <div class="row no-gutters">
         <div class="col-12">
-            <div class="image-container" style="background-image: url('{{ unsplash_photo }}'); background-size: cover; background-position: center; height: 100vh; display: flex; flex-direction: column;">
+            <div class="image-container">
                 <div class="posts-container">
-                    <div class="row">
+                    <div class="row no-gutters">
                         {% for post in posts %}
-                        <div class="col-md-4">
-                            <div class="single-post" style="margin: 10px; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 10px; border: 1px solid #ccc; color: #fff; box-sizing: border-box;">
-                                <p class="post-content" style="margin-bottom: 0.25rem;">{{ post.truncated_content() }}</p>
-                                <p class="post-meta" style="margin-bottom: 0.25rem;"><small style="color: #ddd;">By {{ post.user.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
+                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                            <div class="single-post" style="margin: 0; padding: 10px; background: rgba(0, 0, 0, 0.25); border-radius: 10px; border: 1px solid #ccc; color: #fff; box-sizing: border-box;">
+                                <p class="post-content" style="font-size: 0.75em; margin-bottom: 0.25rem;">{{ post.truncated_content() }}</p>
+                                <p class="post-meta" style="font-size: 0.75em; margin-bottom: 0.25rem;"><small style="color: #ddd;">By {{ post.user.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
-                <div class="pagination-container" style="align-self: center; margin-top: auto;">
+                <div class="pagination-container" style="align-self: center; margin-top: auto; padding: 10px;">
                     <nav aria-label="Page navigation">
                         <ul class="pagination">
                             {% if page > 1 %}
