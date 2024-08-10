@@ -37,8 +37,7 @@ app = FastAPI(
       profile pictures and contact details.
     - **Post Creation and Editing**: Users can create, view, edit, and delete posts, making it easy to share 
       thoughts and discoveries.
-    - **Admin Dashboard**: Administrators have access to an admin dashboard to manage user data and view 
-      user-specific posts.
+    - **Admin Options**: Administrators have access to additional buttons to manage users data and users posts.
     - **Secure and Scalable**: Built with security and scalability in mind, leveraging FastAPI's robust 
       middleware and dependency injection systems.
     - **Two-Role Authentication**: Implements a secure authentication system using JWT (JSON Web Tokens) for 

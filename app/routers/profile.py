@@ -1,3 +1,4 @@
+# profile.py
 import os
 from typing import Optional
 
@@ -94,7 +95,7 @@ async def get_profile(request: Request,
         'user_id': result_user.id,
         'username': result_user.username,
         'email': result_user.email,
-        'role': result_user.role  # Use role as a string
+        'role': result_user.role
     }
 
     result_profile = await get_user_profile(db, user_id)
@@ -193,7 +194,6 @@ async def update_profile(request: Request,
     else:
         file_location = previous_photo_path
 
-    # Include role in UserProfileUpdate only if current user is admin
     if current_user['role'] == 'admin':
         user_profile = UserProfileUpdate(first_name=first_name,
                                          last_name=last_name,
@@ -210,13 +210,11 @@ async def update_profile(request: Request,
 
     await update_user_profile(db, user_id, user_profile)
 
-    # Update user role if provided and current user is admin
     if role and current_user['role'] == 'admin':
         user.role = role
         await db.commit()
         await db.refresh(user)
 
-    # Redirect based on the role of the current user
     if current_user['role'] == 'admin':
         endpoint = f"/protected/profile/{user_id}"
     else:

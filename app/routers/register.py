@@ -1,3 +1,4 @@
+# register.py
 from typing import Annotated
 
 from fastapi import (APIRouter,
@@ -75,7 +76,7 @@ async def register_user(request: Request,
                                            message_text=f"Username {username} is already registered!",
                                            endpoint="/register"
                                            )
-    user = UserCreate(username=username, email=email, password=password, role="user")  # Include role here
+    user = UserCreate(username=username, email=email, password=password, role="user")
     await create_user(db=db, user=user)
     new_top_message = {
         "class": "alert alert-info rounded",
