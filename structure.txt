@@ -1,6 +1,6 @@
-Project folder
 ├───📁 alembic/
 │   ├───📁 versions/
+│   │   └───📄 429584cd5a51_initial_migration.py
 │   ├───📄 env.py
 │   ├───📄 README
 │   └───📄 script.py.mako
@@ -16,7 +16,9 @@ Project folder
 │   │   ├───📄 postgre_db.py
 │   │   └───📄 __init__.py
 │   ├───📁 routers/
+│   │   ├───📄 admin.py
 │   │   ├───📄 login.py
+│   │   ├───📄 posts.py
 │   │   ├───📄 profile.py
 │   │   ├───📄 register.py
 │   │   ├───📄 root.py
@@ -36,19 +38,31 @@ Project folder
 │       ├───📄 default_unsplash.jpg
 │       └───📄 navbar_logo.png
 ├───📁 templates/
+│   ├───📁 admin/
+│   │   ├───📄 users.html
+│   │   └───📄 user_posts.html
 │   ├───📁 include/
 │   │   └───📄 navbar.html
 │   ├───📁 user/
 │   │   ├───📄 confirm_delete.html
+│   │   ├───📄 create_post.html
+│   │   ├───📄 edit_post.html
 │   │   ├───📄 login.html
+│   │   ├───📄 my_posts.html
 │   │   ├───📄 profile.html
-│   │   └───📄 register.html
+│   │   ├───📄 register.html
+│   │   └───📄 view_post.html
 │   ├───📄 base.html
 │   ├───📄 icons.py
 │   └───📄 root.html
+├───📄 .dockerignore
 ├───📄 alembic.ini
 ├───📄 docker-compose.yml
 ├───📄 Dockerfile.postgres
 ├───📄 Dockerfile.web
+├───📄 entrypoint.sh
+├───📄 README.md
 ├───📄 requirements.txt
+├───📄 sample.env
+├───📄 structure.txt
 └───📄 test_main.http
