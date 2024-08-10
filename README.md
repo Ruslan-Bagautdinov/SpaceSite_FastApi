@@ -62,7 +62,7 @@ Admin
 Clone the Repository
 
 ```bash
-git clone https://github.com/Ruslan-Bagautdinov/SpaceSite_FastApi
+git clone https://github.com/Ruslan-Bagautdinov/SpaceSite_FastApi.git
 cd SpaceSite_FastApi
 ```
 
@@ -78,7 +78,7 @@ docker-compose up --build
 1. Clone the Repository:
 
 ```bash
-git clone https://github.com/Ruslan-Bagautdinov/SpaceSite_FastApi
+git clone https://github.com/Ruslan-Bagautdinov/SpaceSite_FastApi.git
 cd SpaceSite_FastApi
 ```
 2. Create a Virtual Environment:
