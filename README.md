@@ -120,6 +120,29 @@ alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
+## Users
+
+Two test users are added to the database. Their login information is as follows:
+
+#### Admin User:
+- Username: 
+```
+admin
+```
+- Password: 
+```
+123
+```
+#### Regular User:
+- Username: 
+```
+user
+```
+- Password: 
+```
+123
+```
+
 Your application should now be running locally. You can access it at http://localhost:8000
 
 ## License
