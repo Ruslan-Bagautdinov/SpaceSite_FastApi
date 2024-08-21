@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} 
+{% block title %}
     {% if user['role'] == 'admin' %}
         Admin - User Posts
     {% else %}
@@ -20,44 +20,56 @@
     <div class="container">
         <h2>
             {% if user['role'] == 'admin' %}
-                User Posts
+                Posts of {{ user['role'] }} {{ user['username'] }}
             {% else %}
                 My Posts
             {% endif %}
         </h2>
-        <ul style="list-style-type: none; padding: 0;">
-            {% for post in posts %}
-                <li style="margin-bottom: 10px;">
-                    <div style="border: 1px solid #ccc; border-radius: 10px; padding: 10px; background-color: #fff;">
-                        <a href="/posts/edit/{{ post.id }}" class="post-link">
-                            {{ post.truncated_content() }}
-                        </a>
+
+        <div id="posts-row" class="row">
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="col-12 mb-4">
+                        <div class="card card-post rounded border" style="opacity: 0.8;">
+                            <div class="card-body card-post-body">
+                                <a href="/posts/edit/{{ post.id }}"
+                                   class="card-link" style="text-decoration: none;">
+                                    <p class="card-text">
+                                        {{ post.truncated_content() }}</p>
+                                    <p class="card-text">Created at {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </li>
+                {% endfor %}
             {% else %}
-                <li>No posts yet.</li>
-            {% endfor %}
-        </ul>
+                <div class="col-12">
+                    <p>No Posts Yet</p>
+                </div>
+            {% endif %}
+        </div>
+
+
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 {% if page > 1 %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1">&laquo; first</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page - 1 }}">previous</a>
-                </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; first</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page - 1 }}">previous</a>
+                    </li>
                 {% endif %}
                 <li class="page-item disabled">
                     <a class="page-link" href="#">Page {{ page }} of {{ total_pages }}</a>
                 </li>
                 {% if page < total_pages %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page + 1 }}">next</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ total_pages }}">last &raquo;</a>
-                </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page + 1 }}">next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ total_pages }}">last &raquo;</a>
+                    </li>
                 {% endif %}
             </ul>
         </nav>
