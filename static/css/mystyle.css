@@ -1,13 +1,13 @@
 /* mystyle.css */
 
-
 html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
+/* Light Theme */
 body.light-theme {
     color: #222222;
     min-height: 100vh;
@@ -25,10 +25,10 @@ body.light-theme::before {
     bottom: 0;
     z-index: -1;
     background: linear-gradient(
-        180deg,
-        rgba(248,249,250,1) 0%,
-        rgba(248,249,250,1) 45%,
-        rgba(148,152,156,1) 100%
+            180deg,
+            rgba(248, 249, 250, 1) 0%,
+            rgba(248, 249, 250, 1) 45%,
+            rgba(148, 152, 156, 1) 100%
     );
 }
 
@@ -37,6 +37,7 @@ body.light-theme .custom-navbar {
     color: #222222;
 }
 
+/* Dark Theme */
 body.dark-theme {
     color: #eeeeee;
     min-height: 100vh;
@@ -54,54 +55,194 @@ body.dark-theme::before {
     bottom: 0;
     z-index: -1;
     background: linear-gradient(
-        180deg,
-        rgba(33,37,41,1) 0%,
-        rgba(33,37,41,1) 45%,
-        rgba(99,107,115,1) 100%
+            180deg,
+            rgba(52, 58, 64, 1) 0%,
+            rgba(52, 58, 64, 1) 45%,
+            rgba(99, 107, 115, 1) 100%
     );
 }
 
 body.dark-theme .custom-navbar {
-  background-color: #343a41;
-  color: #eeeeee;
+    background-color: #343a41;
+    color: #eeeeee;
 }
 
 body.light-theme .custom-navbar .navbar-brand,
 body.light-theme .custom-navbar .nav-link {
-  color: #212529;
+    color: #212529;
 }
 
 body.light-theme .custom-navbar .navbar-toggler {
-  color: #212529;
-  border-color: #212529;
+    color: #212529;
+    border-color: #212529;
 }
 
 body.light-theme .custom-navbar .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 .theme-toggle.active {
-  font-weight: bold;
+    font-weight: bold;
 }
 
- .image-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow-x: hidden;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            background-size: cover;
-            background-position: center;
-        }
+/* Light Theme Dropdown Menu */
+body.light-theme #dropdown-menu-list {
+    background-color: rgba(248, 249, 250, 1); /* Match the starting gradient color */
+    color: #222222;
+    border: 1px solid #000000; /* Black border for light theme */
+    border-radius: 5px; /* Rounded corners */
+}
 
-.posts-container {
+body.light-theme #dropdown-menu-list .dropdown-item {
+    color: #222222;
+}
+
+body.light-theme #dropdown-menu-list .dropdown-item:hover,
+body.light-theme #dropdown-menu-list .dropdown-item:focus {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+/* Dark Theme Dropdown Menu */
+body.dark-theme #dropdown-menu-list {
+    background-color: rgba(52, 58, 64, 1); /* Match the starting gradient color */
+    color: #eeeeee;
+    border: 1px solid #000000; /* Black border for dark theme */
+    border-radius: 5px; /* Rounded corners */
+}
+
+body.dark-theme #dropdown-menu-list .dropdown-item {
+    color: #eeeeee;
+}
+
+body.dark-theme #dropdown-menu-list .dropdown-item:hover,
+body.dark-theme #dropdown-menu-list .dropdown-item:focus {
+    background-color: rgba(52, 58, 64, 1);
+    color: rgba(248, 249, 250, 1);
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: auto; /* Adjust the height as needed */
+    min-height: 100vh; /* Ensure the container takes up at least the full viewport height */
+    overflow: hidden;
     display: flex;
-    flex-wrap: wrap;
-    padding: 20px;
-    justify-content: space-around;
-    align-content: flex-start;
-    flex-grow: 1;
-    overflow-y: hidden;
+    flex-direction: column;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keep the background image stationary */
+    border-radius: 15px; /* Add rounded corners */
+}
+
+.posts-overlay {
+    position: relative; /* Change to relative */
+    width: 100%;
+    height: auto; /* Change to auto */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to the top */
+    align-items: center; /* Center align horizontally */
+    padding: 20px; /* Adjust padding as needed */
+    overflow-y: auto; /* Allow vertical scrolling within the container */
+}
+
+.posts-overlay .container {
+    width: 100%;
+    max-width: 1200px; /* Adjust the max-width as needed */
+    flex-grow: 1; /* Allow the container to grow and take up available space */
+    overflow-y: hidden; /* Allow scrolling within the container */
+}
+
+/* Light Theme Card */
+body.light-theme .card.card-post {
+    background-color: rgba(248, 249, 250, 1) !important; /* Match the starting gradient color */
+    border: 1px solid #212529 !important;
+}
+
+body.light-theme .card.card-post .card-body.card-post-body {
+    color: #222222 !important;
+}
+
+body.light-theme .card.card-post .card-body.card-post-body .card-text {
+    color: #000000 !important; /* Black text for light theme */
+}
+
+/* Dark Theme Card */
+body.dark-theme .card.card-post {
+    background-color: rgba(52, 58, 64, 1) !important; /* Match the starting gradient color */
+    border: 1px solid #eeeeee !important;
+}
+
+body.dark-theme .card.card-post .card-body.card-post-body {
+    color: #eeeeee !important;
+}
+
+body.dark-theme .card.card-post .card-body.card-post-body .card-text {
+    color: #ffffff !important; /* White text for dark theme */
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.modal-header {
+    background-color: rgba(52, 58, 64, 1);
+    color: rgba(248, 249, 250, 1);
+}
+
+.modal-body {
+    background-color: rgba(52, 58, 64, 1);
+    color: rgba(248, 249, 250, 1);
+}
+
+.modal-footer {
+    background-color: rgba(52, 58, 64, 1);
+    color: rgba(248, 249, 250, 1);
+}
+
+/* Light Theme Modal */
+body.light-theme .modal-content {
+    background-color: rgba(248, 249, 250, 1);
+    color: #222222;
+}
+
+body.light-theme .modal-header,
+body.light-theme .modal-body,
+body.light-theme .modal-footer {
+    background-color: rgba(248, 249, 250, 1);
+    color: #222222;
+}
+
+body.light-theme .modal-header .close {
+    color: #222222;
+}
+
+/* Dark Theme Modal */
+body.dark-theme .modal-content {
+    background-color: rgba(52, 58, 64, 1);
+    color: #eeeeee;
+}
+
+body.dark-theme .modal-header,
+body.dark-theme .modal-body,
+body.dark-theme .modal-footer {
+    background-color: rgba(52, 58, 64, 1);
+    color: #eeeeee;
+}
+
+body.dark-theme .modal-header .close {
+    color: #eeeeee;
 }

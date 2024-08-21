@@ -49,15 +49,15 @@
                 {% endif %}
             </button>
 
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul id="dropdown-menu-list" class="dropdown-menu dropdown-menu-end">
                 {% if user %}
                     {% if user.role == 'admin' %}
                         <li><a class="dropdown-item" href="/admin/users">
                             <i class="bi bi-people-fill"></i>
                             All Users
                         </a>
+                        </li>
                     {% endif %}
-                    </li>
                     <li><a class="dropdown-item" href="/protected/me">
                         <i class="bi bi-person-square"></i>
                         Profile

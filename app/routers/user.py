@@ -1,4 +1,4 @@
-# posts.py
+# user.py
 from fastapi import APIRouter, Depends, Request, Query
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,7 +16,7 @@ from app.database.postgre_db import get_session
 from app.tools.functions import redirect_with_message
 from templates.icons import WARNING_ICON, WARNING_CLASS, OK_ICON, OK_CLASS
 
-router = APIRouter(tags=['posts'])
+router = APIRouter(tags=['user'])
 templates = Jinja2Templates(directory="templates")
 
 
@@ -97,7 +97,7 @@ async def view_post(request: Request, post_id: int, db: AsyncSession = Depends(g
                                            message_text="Post not found",
                                            endpoint="/")
     top_message = await handle_top_message(request)
-    return templates.TemplateResponse("user/view_post.html", {
+    return templates.TemplateResponse("posts/view_post.html", {
         "request": request,
         "post": post,
         "user": user,
@@ -118,7 +118,7 @@ async def create_post_form(request: Request, user: TokenData = Depends(check_use
         TemplateResponse: The rendered HTML template for the new post form.
     """
     top_message = await handle_top_message(request)
-    return templates.TemplateResponse("user/create_post.html", {
+    return templates.TemplateResponse("posts/create_post.html", {
         "request": request,
         "user": user,
         "top_message": top_message
@@ -202,7 +202,7 @@ async def edit_post_form(request: Request, post_id: int, db: AsyncSession = Depe
                                            message_text="You do not have permission to edit this post",
                                            endpoint="/posts/all")
     top_message = await handle_top_message(request)
-    return templates.TemplateResponse("user/edit_post.html", {
+    return templates.TemplateResponse("posts/edit_post.html", {
         "request": request,
         "post": post,
         "user": user,

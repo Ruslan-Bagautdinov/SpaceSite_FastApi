@@ -75,7 +75,7 @@ async def admin_user_posts(request: Request,
     total_posts = await get_total_posts_count_by_user(db, user_id)
     total_pages = (total_posts + page_size - 1) // page_size
 
-    return templates.TemplateResponse("admin/user_posts.html", {
+    return templates.TemplateResponse("posts/posts.html", {
         "request": request,
         "posts": posts,
         "user": user,
