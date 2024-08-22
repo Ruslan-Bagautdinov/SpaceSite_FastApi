@@ -1,4 +1,3 @@
-# profile.py
 import os
 from typing import Optional
 
@@ -22,8 +21,8 @@ from app.database.crud import (get_user,
                                update_user_profile,
                                delete_user)
 from app.database.postgre_db import get_session
+from app.tools.functions import read_and_encode_photo, save_file_with_uuid
 from app.tools.functions import redirect_with_message
-from app.tools.functions import save_upload_file, read_and_encode_photo
 from templates.icons import WARNING_ICON, WARNING_CLASS, OK_ICON, OK_CLASS, USER_DELETE_ICON
 
 router = APIRouter(tags=['user profile'], prefix='/protected')
@@ -186,8 +185,7 @@ async def update_profile(request: Request,
                                                endpoint=f"/protected/profile/{user_id}"
                                                )
 
-        file_location = f"{IMAGE_DIR}/{user_photo.filename}"
-        await save_upload_file(user_photo, file_location)
+        file_location = await save_file_with_uuid(user_photo, IMAGE_DIR)
 
         if previous_photo_path and os.path.exists(previous_photo_path):
             os.remove(previous_photo_path)
@@ -231,6 +229,7 @@ async def update_profile(request: Request,
             description="Display the confirmation page for deleting the user's profile.")
 async def confirm_delete(request: Request,
                          user_id: int,
+                         db: AsyncSession = Depends(get_session),
                          user: TokenData | None = Depends(check_user)):
     """
     Display the confirmation page for deleting the user's profile.
@@ -238,16 +237,19 @@ async def confirm_delete(request: Request,
     Args:
         request (Request): The request object.
         user_id (int): The ID of the user whose profile is to be deleted.
+        db (AsyncSession): The database session.
         user (TokenData): The authenticated user data.
 
     Returns:
         TemplateResponse: The rendered HTML template for the confirmation page.
     """
-    if user['role'] == 'admin':
-        return await delete_user_profile(user_id, request)
+    current_user = await get_user_by_username(db, user['username'])
+    current_user_id = current_user.id if current_user else None
+
     return templates.TemplateResponse("user/confirm_delete.html",
                                       {"request": request,
                                        "user_id": user_id,
+                                       "current_user_id": current_user_id,
                                        "user": user}
                                       )
 
@@ -270,6 +272,14 @@ async def delete_user_profile(user_id: int,
         RedirectResponse: Redirect to the root page after deleting the user's profile.
     """
     user_profile = await get_user_profile(db, user_id)
+    if not user_profile:
+        return await redirect_with_message(request=request,
+                                           message_class=WARNING_CLASS,
+                                           message_icon=WARNING_ICON,
+                                           message_text="User profile not found",
+                                           logout=True
+                                           )
+
     previous_photo_path = user_profile.user_photo
 
     if await delete_user(db, user_id):

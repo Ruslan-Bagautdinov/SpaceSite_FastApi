@@ -19,13 +19,31 @@ async def get_user(db: AsyncSession, user_id: int):
 
 
 async def get_user_profile(db: AsyncSession, user_id: int):
-    user_profile = await db.get(UserProfile, user_id)
+    result = await db.execute(select(UserProfile).where(UserProfile.user_id == user_id))
+    user_profile = result.scalar_one_or_none()
     return user_profile
 
 
 async def get_all_users(db: AsyncSession):
     result = await db.execute(select(User))
     return result.scalars().all()
+
+
+async def check_user_exists(db: AsyncSession, username: str, email: str):
+    result = await db.execute(
+        select(User).where(
+            (User.username == username) | (User.email == email)
+        )
+    )
+    user = result.scalar_one_or_none()
+    if user:
+        if user.username == username and user.email == email:
+            return "both"
+        elif user.username == username:
+            return "username"
+        elif user.email == email:
+            return "email"
+    return None
 
 
 async def create_user(db: AsyncSession, user: UserCreate):
@@ -53,7 +71,7 @@ async def authenticate_user(db: AsyncSession, username: str, password: str):
 
 
 async def update_user_profile(db: AsyncSession, user_id: int, user_profile: UserProfileUpdate):
-    result = await db.execute(select(UserProfile).where(UserProfile.id == user_id))
+    result = await db.execute(select(UserProfile).where(UserProfile.user_id == user_id))
     db_user = result.scalars().first()
     if db_user:
         if user_profile.first_name is not None:

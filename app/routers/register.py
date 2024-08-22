@@ -1,4 +1,3 @@
-# register.py
 from typing import Annotated
 
 from fastapi import (APIRouter,
@@ -12,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.schemas import UserCreate, TokenData, User
 from app.auth.utils import authenticated_root_redirect
 from app.database.crud import (create_user,
-                               get_user_by_username)
+                               check_user_exists)
 from app.database.postgre_db import get_session
 from app.routers.login import check_user
 from app.tools.functions import redirect_with_message
@@ -68,14 +67,29 @@ async def register_user(request: Request,
     Returns:
         RedirectResponse: Redirect to the root page after successful registration.
     """
-    db_user = await get_user_by_username(db, username=username)
-    if db_user:
+    existing_user_check = await check_user_exists(db, username=username, email=email)
+    if existing_user_check == "username":
         return await redirect_with_message(request=request,
                                            message_class=WARNING_CLASS,
                                            message_icon=WARNING_ICON,
                                            message_text=f"Username {username} is already registered!",
                                            endpoint="/register"
                                            )
+    elif existing_user_check == "email":
+        return await redirect_with_message(request=request,
+                                           message_class=WARNING_CLASS,
+                                           message_icon=WARNING_ICON,
+                                           message_text=f"Email {email} is already registered!",
+                                           endpoint="/register"
+                                           )
+    elif existing_user_check == "both":
+        return await redirect_with_message(request=request,
+                                           message_class=WARNING_CLASS,
+                                           message_icon=WARNING_ICON,
+                                           message_text=f"Username {username} and Email {email} are already registered!",
+                                           endpoint="/register"
+                                           )
+
     user = UserCreate(username=username, email=email, password=password, role="user")
     await create_user(db=db, user=user)
     new_top_message = {

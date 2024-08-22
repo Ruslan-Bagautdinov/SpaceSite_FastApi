@@ -5,7 +5,7 @@
 {% block page_content %}
     <div class="container-fluid" style="margin: 5px">
         <form id="delete-form" action="/protected/profile/{{ user_id }}/delete" method="post">
-            {% if user.role != 'admin' %}
+            {% if user.role != 'admin' or user_id == current_user_id %}
             <div class="container d-flex align-items-center justify-content-center" style="margin: 5px">
                 <label for="password">{{ user.username }}, enter your password to delete your account</label>
                 <input type="password" class="form-control" id="password" name="password" required>
@@ -34,17 +34,3 @@
 {% endblock %}
 
 {% block scripts %} {{ super() }} {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-

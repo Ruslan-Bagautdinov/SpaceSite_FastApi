@@ -1,45 +1,30 @@
+import base64
+import os
+import random
+import tempfile
+from uuid import uuid4
+
+import aiofiles
+import httpx
+from PIL import Image
 from fastapi import (UploadFile,
                      Request,
                      status
                      )
 from fastapi.responses import RedirectResponse
-
-from PIL import Image
-from alembic import command
-from alembic.config import Config
 from loguru import logger
-import tempfile
-import aiofiles
-import base64
-import httpx
-import random
-import os
-
 
 from app.config import UNSPLASH_ACCESS_KEY
 
-# from app.config import BASE_DIR, SYNC_DATABASE_URL
 
-# def perform_migrations():
-#     alembic_dir = os.path.join(BASE_DIR, 'alembic')
-#
-#     alembic_ini_path = os.path.join(BASE_DIR, 'alembic.ini')
-#
-#     alembic_cfg = Config(alembic_ini_path)
-#
-#     alembic_cfg.set_main_option('script_location', alembic_dir)
-#
-#     alembic_cfg.set_main_option('sqlalchemy.url', SYNC_DATABASE_URL)
-#
-#     logger.info("Running Alembic migrations...")
-#     command.upgrade(alembic_cfg, "head")
-#     logger.info("Migrations completed successfully.")
-
-
-async def save_upload_file(upload_file: UploadFile, destination: str):
+async def save_file_with_uuid(upload_file: UploadFile, destination_dir: str):
     if upload_file is None:
         logger.debug("No file provided.")
-        return
+        return None
+
+    _, ext = os.path.splitext(upload_file.filename)
+    uuid_filename = f"{uuid4()}{ext}"
+    destination = os.path.join(destination_dir, uuid_filename)
 
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         temp_filename = temp_file.name
@@ -59,6 +44,8 @@ async def save_upload_file(upload_file: UploadFile, destination: str):
         img.save(destination)
     finally:
         os.remove(temp_filename)
+
+    return destination
 
 
 async def read_and_encode_photo(photo_path):
