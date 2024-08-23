@@ -146,7 +146,7 @@ async def authenticated_root_redirect(request: Request, username: str, role: str
     response = await redirect_with_message(request=request,
                                            message_class=OK_CLASS,
                                            message_icon=OK_ICON,
-                                           message_text=f"You are logged in with the account: {username}",
+                                           message_text=f"You are logged in as {role} with the account: {username}",
                                            endpoint="/")
     response = set_tokens_in_cookies(response, access_token, refresh_token)
 
