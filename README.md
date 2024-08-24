@@ -59,15 +59,21 @@ Admin
 - GET /admin/users/{user_id}/posts: Retrieve posts by a specific user for admin view.
 
 ## Installation
-Clone the Repository
 
+### Install with Docker
+
+1. Clone the Repository
 ```bash
 git clone https://github.com/Ruslan-Bagautdinov/SpaceSite_FastApi.git
 cd SpaceSite_FastApi
 ```
 
-### Install with Docker
+2. Fill the UNSPLASH_ACCESS_KEY in the sample.env with your's Unsplash Access Key for random space images on root page.
+```dotenv
+UNSPLASH_ACCESS_KEY='your_unsplash_access_key'
+```
 
+3. Build and Run with Docker Compose:
 ```bash
 docker-compose up --build
 ```
